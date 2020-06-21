@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  cloud_firestore: ^0.13.7
   flip_card: ^0.4.4
   adobe_xd: ^0.1.4
   flutter:

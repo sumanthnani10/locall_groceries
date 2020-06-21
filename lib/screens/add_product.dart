@@ -124,7 +124,7 @@ class _AddProductState extends State<AddProduct> {
                             items: <String>[
                               'Category 1',
                               'Category 2',
-                              'Category 4',
+                              'Category 3',
                               'Category 4'
                             ].map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
