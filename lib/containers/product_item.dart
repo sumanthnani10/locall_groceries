@@ -87,22 +87,17 @@ class _ProductItemState extends State<ProductItem>
                     Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             'Rs.${widget.product_price}/${widget.product_quantity} kg',
-                            style: TextStyle(fontSize: 12, color: Colors.black),
+                            style: TextStyle(fontSize: 13, color: Colors.black),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
-                          Text(
-                            '${((widget.product_cut_price - widget.product_price) / widget.product_cut_price * 100).round()}%',
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                          SizedBox(
+                            width: 4,
                           ),
                           Text(
                             'Rs.${widget.product_cut_price}',
@@ -111,6 +106,18 @@ class _ProductItemState extends State<ProductItem>
                                 color: Colors.red,
                                 decoration: TextDecoration.lineThrough,
                                 decorationColor: Colors.black),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Text(
+                            '(${((widget.product_cut_price - widget.product_price) / widget.product_cut_price * 100).round()}%)',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),

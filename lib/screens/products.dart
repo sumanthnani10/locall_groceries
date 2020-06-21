@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:locallgroceries/containers/product_item.dart';
+import 'package:locallgroceries/screens/add_product.dart';
 
 class Products extends StatefulWidget {
   @override
@@ -30,7 +31,9 @@ class _ProductsState extends State<Products> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(createRoute(AddProduct()));
+          },
           splashColor: Colors.green,
           backgroundColor: Colors.white,
           child: Icon(
@@ -201,5 +204,24 @@ class _ProductsState extends State<Products> {
                 ],
               ),
             )));
+  }
+
+  Route createRoute(dest) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => dest,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.fastOutSlowIn;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
   }
 }
