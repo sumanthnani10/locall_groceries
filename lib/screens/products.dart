@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:locallgroceries/containers/product_item.dart';
 import 'package:locallgroceries/screens/add_product.dart';
@@ -168,36 +169,54 @@ class _ProductsState extends State<Products> {
                   SizedBox(
                     height: 8,
                   ),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (constraints.maxWidth <= 600) {
-                        return GridView.count(
-                          physics: BouncingScrollPhysics(),
-                          crossAxisCount: 2,
-                          shrinkWrap: true,
-                          childAspectRatio: 0.825,
-                          children: List.generate(10, (index) {
-                            return ProductItem(
-                                'Rice ${index}',
-                                (100 + index) % 29,
-                                10 + index % 2,
-                                ((100 + index) % 29) + 29);
-                          }),
-                        );
+                  StreamBuilder(
+                    stream: Firestore.instance
+                        .collection('locations')
+                        .document('isnapur')
+                        .collection('groceries')
+                        .snapshots(),
+                    builder: (context, snap) {
+                      if (snap.connectionState == ConnectionState.waiting) {
+                        return LinearProgressIndicator();
                       } else {
-                        return GridView.count(
-                          physics: BouncingScrollPhysics(),
-                          crossAxisCount: 3,
-                          shrinkWrap: true,
-                          childAspectRatio: 0.825,
-                          children: List.generate(10, (index) {
-                            return ProductItem(
-                                'Rice ${index}',
-                                (100 + index) % 29,
-                                10 + index % 2,
-                                ((100 + index) % 29) + 29);
-                          }),
-                        );
+                        if (snap.data.documents.length != 0) {
+                          return LayoutBuilder(
+                            builder: (context, constraints) {
+                              if (constraints.maxWidth <= 600) {
+                                return GridView.count(
+                                  physics: BouncingScrollPhysics(),
+                                  crossAxisCount: 2,
+                                  shrinkWrap: true,
+                                  childAspectRatio: 0.825,
+                                  children: List.generate(
+                                      snap.data.documents.length, (index) {
+                                    return ProductItem(
+                                      snap: snap.data.documents[index],
+                                    );
+                                  }),
+                                );
+                              } else {
+                                return GridView.count(
+                                  physics: BouncingScrollPhysics(),
+                                  crossAxisCount: 3,
+                                  shrinkWrap: true,
+                                  childAspectRatio: 0.825,
+                                  children: List.generate(10, (index) {
+                                    return ProductItem(
+                                      snap: snap.data.documents[index],
+                                    );
+                                  }),
+                                );
+                              }
+                            },
+                          );
+                        } else {
+                          return Center(
+                              child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 32),
+                            child: Text('No Products'),
+                          ));
+                        }
                       }
                     },
                   ),
