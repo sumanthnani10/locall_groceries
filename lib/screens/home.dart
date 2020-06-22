@@ -136,9 +136,10 @@ class _HomeState extends State<Home> {
 
   Route createRoute(dest) {
     return PageRouteBuilder(
+      transitionDuration: Duration(milliseconds: 500),
       pageBuilder: (context, animation, secondaryAnimation) => dest,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(0.0, 1.0);
+        var begin = Offset(1, 0);
         var end = Offset.zero;
         var curve = Curves.fastOutSlowIn;
 

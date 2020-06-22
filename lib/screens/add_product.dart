@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddProduct extends StatefulWidget {
   @override
@@ -10,7 +14,11 @@ class _AddProductState extends State<AddProduct> {
   final formkey = GlobalKey<FormState>();
   TextEditingController name_controller = new TextEditingController();
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
+  Map<String, dynamic> product = new Map<String, dynamic>();
+  bool uploading = false;
 
+  File image;
+  final picker = ImagePicker();
   List<Widget> _items = [];
   List<TextEditingController> price_controller =
       new List<TextEditingController>();
@@ -24,11 +32,14 @@ class _AddProductState extends State<AddProduct> {
   List<String> units = new List<String>();
   int count = 1;
 
-  String name, cat = 'Category 1';
+  String name, cat = 'Select any Category', desc;
+
+  TextEditingController desc_controller = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    image = null;
     price_controller.add(new TextEditingController());
     oprice_controller.add(new TextEditingController());
     quan_controller.add(new TextEditingController());
@@ -37,6 +48,13 @@ class _AddProductState extends State<AddProduct> {
     oprices.add(0);
     quans.add(0);
     _items.add(getWidget(0));
+  }
+
+  Future getImage() async {
+    PickedFile pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      image = File(pickedFile.path);
+    });
   }
 
   Widget priceList() {
@@ -118,9 +136,14 @@ class _AddProductState extends State<AddProduct> {
         children: <Widget>[
           Flexible(
             child: TextFormField(
+              onFieldSubmitted: (term) {
+                FocusScope.of(context).unfocus();
+                FocusScope.of(context).nextFocus();
+              },
               controller: price_controller[index],
               maxLines: 1,
               keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.next,
               validator: (pprice) {
                 if (pprice.isEmpty) {
                   return "*Required";
@@ -148,6 +171,11 @@ class _AddProductState extends State<AddProduct> {
           ),
           Flexible(
             child: TextFormField(
+              onFieldSubmitted: (term) {
+                FocusScope.of(context).unfocus();
+                FocusScope.of(context).nextFocus();
+              },
+              textInputAction: TextInputAction.next,
               controller: oprice_controller[index],
               maxLines: 1,
               keyboardType: TextInputType.number,
@@ -178,6 +206,11 @@ class _AddProductState extends State<AddProduct> {
           ),
           Flexible(
             child: TextFormField(
+              onFieldSubmitted: (term) {
+                FocusScope.of(context).unfocus();
+                FocusScope.of(context).nextFocus();
+              },
+              textInputAction: TextInputAction.next,
               controller: quan_controller[index],
               maxLines: 1,
               keyboardType: TextInputType.number,
@@ -250,6 +283,30 @@ class _AddProductState extends State<AddProduct> {
         child: item);
   }
 
+  uploadProduct() async {
+    product = {
+      'name': name,
+      'category': cat,
+      'prices': count,
+      'description': desc
+    };
+    for (int i = 1; i <= count; i++) {
+      product['price_${i}'] = prices[i - 1];
+      product['mrp_${i}'] = oprices[i - 1];
+      product['quantity_${i}'] = quans[i - 1];
+      product['unit_${i}'] = units[i - 1];
+    }
+    final StorageUploadTask uploadTask = FirebaseStorage()
+        .ref()
+        .child('Images/isnapur/groceries')
+        .child(name)
+        .putFile(image);
+    final StorageTaskSnapshot snapshot = await uploadTask.onComplete;
+    String img = await snapshot.ref.getDownloadURL();
+    product['image'] = img;
+    print(product);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -259,7 +316,33 @@ class _AddProductState extends State<AddProduct> {
         actions: <Widget>[
           FlatButton(
             onPressed: () {
-              formkey.currentState.validate();
+              if (!uploading) {
+                setState(() {
+                  uploading = true;
+                });
+                if (formkey.currentState.validate()) {
+                  uploading = false;
+                  if (cat != 'Select any Category') {
+                    if (image != null) {
+                      uploadProduct();
+                    } else {
+                      setState(() {
+                        uploading = false;
+                      });
+                      _showDialog('Please Select an Image');
+                    }
+                  } else {
+                    setState(() {
+                      uploading = false;
+                    });
+                    _showDialog('Please Select a category');
+                  }
+                } else {
+                  setState(() {
+                    uploading = false;
+                  });
+                }
+              }
             },
             child: Text(
               'Save',
@@ -290,21 +373,28 @@ class _AddProductState extends State<AddProduct> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(
-                      color: Colors.white,
-                      height: 100,
-                      width: 150,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image(
-                          image: NetworkImage(
-                              'https://media.istockphoto.com/photos/raw-white-rice-in-brown-bowl-and-and-ear-of-rice-or-unmilled-rice-on-picture-id974779604?k=6&m=974779604&s=612x612&w=0&h=YFtU6jUvvpI8NX2W3rxIwB_-G9sW0JJLM6WHbyeEvWI='),
-                          fit: BoxFit.cover,
+                    InkWell(
+                      onTap: () {
+                        getImage();
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        height: 100,
+                        width: 150,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image(
+                            image: image == null
+                                ? AssetImage('assets/choose_an_image_ph.png')
+                                : FileImage(image),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -312,7 +402,9 @@ class _AddProductState extends State<AddProduct> {
                       color: Color(0xff0011FF),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16)),
-                      onPressed: () {},
+                      onPressed: () {
+                        getImage();
+                      },
                       child: Text(
                         'Add Image',
                         style: TextStyle(color: Colors.white),
@@ -333,6 +425,11 @@ class _AddProductState extends State<AddProduct> {
                           TextFormField(
                             controller: name_controller,
                             maxLines: 1,
+                            onFieldSubmitted: (term) {
+                              FocusScope.of(context).unfocus();
+                              FocusScope.of(context).nextFocus();
+                            },
+                            textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.text,
                             textCapitalization: TextCapitalization.words,
                             validator: (pname) {
@@ -359,7 +456,7 @@ class _AddProductState extends State<AddProduct> {
                                 fillColor: Colors.white),
                           ),
                           SizedBox(
-                            height: 16,
+                            height: 4,
                           ),
                           Text(' Category'),
                           SizedBox(
@@ -379,10 +476,20 @@ class _AddProductState extends State<AddProduct> {
                               isExpanded: true,
                               value: cat,
                               items: <String>[
-                                'Category 1',
-                                'Category 2',
-                                'Category 3',
-                                'Category 4'
+                                'Select any Category',
+                                'Dry Fruits and Masala',
+                                'Dals & Pulses',
+                                'Rice & Rice Products',
+                                'Atta & Flour',
+                                'Salt & Sugar',
+                                'Snacks and Food',
+                                'Soaps and Shampoo',
+                                'Cleaners',
+                                'Hair Oils',
+                                'Body Sprays',
+                                'Chocolates',
+                                'Personal Hygiene',
+                                'Agarbathhi'
                               ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
@@ -399,7 +506,39 @@ class _AddProductState extends State<AddProduct> {
                           SizedBox(
                             height: 16,
                           ),
-                          Container(height: 300, child: priceList())
+                          TextFormField(
+                            controller: desc_controller,
+                            maxLines: 3,
+                            onFieldSubmitted: (term) {
+                              FocusScope.of(context).unfocus();
+                              FocusScope.of(context).nextFocus();
+                            },
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            validator: (pname) {
+                              desc = pname;
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                labelStyle: TextStyle(color: Colors.black),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 4, horizontal: 8),
+                                labelText: 'Description',
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                fillColor: Colors.white),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Container(height: 210, child: priceList())
                         ],
                       )),
                 )
@@ -408,6 +547,29 @@ class _AddProductState extends State<AddProduct> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showDialog(text) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+//          title: new Text("Alert Dialog title"),
+          content: new Text(text),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Ok"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
