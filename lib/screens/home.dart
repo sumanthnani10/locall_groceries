@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'file:///C:/Users/suman/StudioProjects/locall_groceries/lib/containers/order_container.dart';
@@ -15,14 +14,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    inti();
-  }
-
-  inti() async {
-    await Firestore.instance
-        .collection('grocery_sairam')
-        .getDocuments()
-        .then((value) => print(value.documents[1].data));
   }
 
   @override
