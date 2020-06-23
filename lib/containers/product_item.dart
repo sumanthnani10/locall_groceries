@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,115 +49,122 @@ class _ProductItemState extends State<ProductItem>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: AspectRatio(
-                  aspectRatio: 3 / 2,
-                  child: Image(
-                    image: NetworkImage(widget.snap['image']),
-                    fit: BoxFit.cover,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: AspectRatio(
+                    aspectRatio: 3 / 2,
+                    child: Image(
+                      image: NetworkImage(widget.snap['image']),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  widget.snap['name'],
-                  style: TextStyle(fontSize: 16),
-                  overflow: TextOverflow.ellipsis,
+                SizedBox(
+                  height: 8,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  widget.snap['category'],
-                  style: TextStyle(fontSize: 10, color: Colors.black54),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    widget.snap['name'],
+                    style: TextStyle(fontSize: 16),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  'Description :',
-                  style: TextStyle(fontSize: 10, color: Colors.black),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    widget.snap['category'],
+                    style: TextStyle(fontSize: 10, color: Colors.black54),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  widget.snap['description'] == ''
-                      ? '    No description'
-                      : '    ' + widget.snap['description'],
-                  style: TextStyle(fontSize: 12, color: Colors.black),
+                SizedBox(
+                  height: 8,
                 ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  'Prices :',
-                  style: TextStyle(fontSize: 10, color: Colors.black),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Description :',
+                    style: TextStyle(fontSize: 10, color: Colors.black),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: List.generate(widget.snap['prices'], (index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Rs.${widget.snap['price_${index + 1}']}/${widget.snap['quantity_${index + 1}']}${widget.snap['unit_${index + 1}']}',
-                            style: TextStyle(fontSize: 13, color: Colors.black),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    widget.snap['description'] == ''
+                        ? '    No description'
+                        : '    ' + widget.snap['description'],
+                    style: TextStyle(fontSize: 12, color: Colors.black),
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Prices :',
+                    style: TextStyle(fontSize: 10, color: Colors.black),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: List.generate(widget.snap['prices'], (index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Rs.${widget.snap['price_${index + 1}']}/${widget.snap['quantity_${index + 1}']}${widget.snap['unit_${index + 1}']}',
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.black),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                'Rs.${widget.snap['mrp_${index + 1}']}',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: Colors.black),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                '(${((widget.snap['mrp_${index + 1}'] - widget.snap['price_${index + 1}']) / widget.snap['mrp_${index + 1}'] * 100).round()}%)',
+                                style: TextStyle(
+                                    fontSize: 8,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.w600),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            'Rs.${widget.snap['mrp_${index + 1}']}',
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.red,
-                                decoration: TextDecoration.lineThrough,
-                                decorationColor: Colors.black),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            '(${((widget.snap['mrp_${index + 1}'] - widget.snap['price_${index + 1}']) / widget.snap['mrp_${index + 1}'] * 100).round()}%)',
-                            style: TextStyle(
-                                fontSize: 8,
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -287,6 +295,11 @@ class _ProductItemState extends State<ProductItem>
                         child: InkWell(
                           onTap: () async {
                             cardKey.currentState.toggleCard();
+                            await FirebaseStorage.instance
+                                .ref()
+                                .child(
+                                    'Images/isnapur/groceries/${widget.snap['name']}')
+                                .delete();
                             await Firestore.instance
                                 .collection('locations')
                                 .document('isnapur')

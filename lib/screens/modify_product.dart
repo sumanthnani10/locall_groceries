@@ -37,6 +37,7 @@ class _ModifyProductState extends State<ModifyProduct> {
   int count;
 
   String name, cat, desc;
+  bool imageChanged = false;
 
   TextEditingController desc_controller = new TextEditingController();
 
@@ -66,7 +67,9 @@ class _ModifyProductState extends State<ModifyProduct> {
   }
 
   Future getImage() async {
-    PickedFile pickedFile = await picker.getImage(source: ImageSource.gallery);
+    PickedFile pickedFile = await picker
+        .getImage(source: ImageSource.gallery)
+        .whenComplete(() => imageChanged = true);
     setState(() {
       image = File(pickedFile.path);
     });
@@ -393,14 +396,17 @@ class _ModifyProductState extends State<ModifyProduct> {
       product['quantity_${i}'] = quans[i - 1];
       product['unit_${i}'] = units[i - 1];
     }
-    final StorageUploadTask uploadTask = FirebaseStorage()
-        .ref()
-        .child('Images/isnapur/groceries')
-        .child(name)
-        .putFile(image);
-    final StorageTaskSnapshot snapshot = await uploadTask.onComplete;
-    String img = await snapshot.ref.getDownloadURL();
-    product['image'] = img;
+    product['image'] = widget.snap['image'];
+    if (imageChanged) {
+      final StorageUploadTask uploadTask = FirebaseStorage()
+          .ref()
+          .child('Images/isnapur/groceries')
+          .child(name)
+          .putFile(image);
+      final StorageTaskSnapshot snapshot = await uploadTask.onComplete;
+      String img = await snapshot.ref.getDownloadURL();
+      product['image'] = img;
+    }
     await Firestore.instance
         .collection('locations')
         .document('isnapur')
@@ -429,14 +435,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                 });
                 if (formkey.currentState.validate()) {
                   if (cat != 'Select any Category') {
-                    if (image != null) {
-                      uploadProduct();
-                    } else {
-                      setState(() {
-                        uploading = false;
-                      });
-                      _showDialog('Please Select an Image');
-                    }
+                    uploadProduct();
                   } else {
                     setState(() {
                       uploading = false;
@@ -529,6 +528,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                                       onPressed: () {
                                         setState(() {
                                           image = null;
+                                          imageChanged = false;
                                         });
                                       },
                                       child: Text(
