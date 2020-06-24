@@ -33,9 +33,10 @@ class _AddProductState extends State<AddProduct> {
   List<String> units = new List<String>();
   int count = 1;
 
-  String name, cat = 'Others', desc;
+  String name, cat = 'Others', desc, subname = '';
 
   TextEditingController desc_controller = new TextEditingController();
+  TextEditingController subname_controller = new TextEditingController();
 
   @override
   void initState() {
@@ -220,7 +221,7 @@ class _AddProductState extends State<AddProduct> {
     FocusScope.of(context).unfocus();
 
     product = {
-      'name': name,
+      'name': subname == '' ? name : name + '(' + subname + ')',
       'category': cat,
       'prices': count,
       'description': desc
@@ -413,6 +414,42 @@ class _AddProductState extends State<AddProduct> {
                                 SizedBox(
                                   height: 4,
                                 ),
+                                TextFormField(
+                                  controller: subname_controller,
+                                  maxLines: 1,
+                                  onFieldSubmitted: (term) {
+                                    FocusScope.of(context).unfocus();
+                                    FocusScope.of(context).nextFocus();
+                                  },
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.text,
+                                  textCapitalization: TextCapitalization.words,
+                                  validator: (pname) {
+                                    subname = pname;
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          borderSide:
+                                              BorderSide(color: Colors.black)),
+                                      labelStyle:
+                                          TextStyle(color: Colors.black),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 8),
+                                      labelText: 'Sub Name',
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          borderSide:
+                                              BorderSide(color: Colors.black)),
+                                      fillColor: Colors.white),
+                                ),
+                                SizedBox(
+                                  height: 4,
+                                ),
                                 Text(' Category'),
                                 SizedBox(
                                   height: 1,
@@ -501,7 +538,7 @@ class _AddProductState extends State<AddProduct> {
                                   height: 16,
                                 ),
                                 Container(
-                                    height: 210,
+                                    height: 180,
                                     child: Column(
                                       children: <Widget>[
                                         Expanded(

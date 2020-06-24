@@ -125,37 +125,49 @@ class _ProductItemState extends State<ProductItem>
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Rs.${widget.snap['price_${index + 1}']}/${widget.snap['quantity_${index + 1}']}${widget.snap['unit_${index + 1}']}',
+                                widget.snap['quantity_${index + 1}']
+                                            .toString() !=
+                                        '0'
+                                    ? 'Rs.${widget.snap['price_${index + 1}']}/${widget.snap['quantity_${index + 1}']}${widget.snap['unit_${index + 1}']}'
+                                    : 'Rs.${widget.snap['price_${index + 1}']}',
                                 style: TextStyle(
                                     fontSize: 13, color: Colors.black),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text(
-                                'Rs.${widget.snap['mrp_${index + 1}']}',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.red,
-                                    decoration: TextDecoration.lineThrough,
-                                    decorationColor: Colors.black),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                              SizedBox(
-                                width: 4,
-                              ),
-                              Text(
-                                '(${((widget.snap['mrp_${index + 1}'] - widget.snap['price_${index + 1}']) / widget.snap['mrp_${index + 1}'] * 100).round()}%)',
-                                style: TextStyle(
-                                    fontSize: 8,
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.w600),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
+                              if (widget.snap['price_${index + 1}'] !=
+                                  widget.snap['mrp_${index + 1}'])
+                                SizedBox(
+                                  width: 4,
+                                ),
+                              if (widget.snap['price_${index + 1}'] !=
+                                  widget.snap['mrp_${index + 1}'])
+                                Text(
+                                  'Rs.${widget.snap['mrp_${index + 1}']}',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.red,
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationColor: Colors.black),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              if (widget.snap['price_${index + 1}'] !=
+                                  widget.snap['mrp_${index + 1}'])
+                                SizedBox(
+                                  width: 4,
+                                ),
+                              if (widget.snap['price_${index + 1}'] !=
+                                  widget.snap['mrp_${index + 1}'])
+                                Text(
+                                  '(${((widget.snap['mrp_${index + 1}'] - widget.snap['price_${index + 1}']) / widget.snap['mrp_${index + 1}'] * 100).round()}%)',
+                                  style: TextStyle(
+                                      fontSize: 8,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
                             ],
                           ),
                         );
@@ -213,6 +225,9 @@ class _ProductItemState extends State<ProductItem>
                                   ),
                                 ),
                               ),
+                            ),
+                            SizedBox(
+                              height: 1,
                             ),
                             Padding(
                               padding:
