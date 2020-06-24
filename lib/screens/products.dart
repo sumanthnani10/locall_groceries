@@ -99,6 +99,7 @@ class _ProductsState extends State<Products> {
                         .collection('locations')
                         .document('isnapur')
                         .collection('groceries')
+                        .orderBy('name')
                         .snapshots(),
                     builder: (context, snap) {
                       if (snap.connectionState == ConnectionState.waiting) {

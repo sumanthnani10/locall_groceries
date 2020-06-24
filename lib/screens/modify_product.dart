@@ -441,14 +441,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                   uploading = true;
                 });
                 if (formkey.currentState.validate()) {
-                  if (cat != 'Select any Category') {
-                    uploadProduct();
-                  } else {
-                    setState(() {
-                      uploading = false;
-                    });
-                    _showDialog('Please Select a category');
-                  }
+                  uploadProduct();
                 } else {
                   setState(() {
                     uploading = false;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:locallgroceries/screens/profile.dart';
 
 import 'file:///C:/Users/suman/StudioProjects/locall_groceries/lib/containers/order_container.dart';
 
@@ -22,16 +23,8 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: InkWell(
-          onTap: () {
-            Navigator.of(context).push(createRoute(Products()));
-            print('dfvbnjkiu');
-          },
-          child: Icon(
-            Icons.menu,
-            color: Colors.black,
-            size: 32,
-          ),
+        iconTheme: IconThemeData(
+          color: Colors.black,
         ),
         title: Text(
           'Orders',
@@ -39,6 +32,100 @@ class _HomeState extends State<Home> {
               color: Colors.black, fontSize: 24, fontWeight: FontWeight.w600),
         ),
       ),
+      drawer: Drawer(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.orange[200], Colors.orange[300]]),
+                //color: Colors.blue,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Icon(
+                      Icons.photo,
+                      size: 70,
+                    ),
+                  ),
+                  Text("Sai Ram"),
+                  Text("Kirana Shop"),
+                ],
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: FlatButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.home),
+                  label: Text(
+                    'Home',
+                    style: TextStyle(fontSize: 15.0),
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(context, createRoute(Products()));
+              },
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: FlatButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.shopping_basket),
+                  label: Text(
+                    'Products',
+                    style: TextStyle(fontSize: 15.0),
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(context, createRoute(Profile()));
+              },
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: FlatButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.account_circle),
+                  label: Text(
+                    'Profile',
+                    style: TextStyle(fontSize: 15.0),
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+//                Navigator.push(context, createRoute(Profile()));
+              },
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: FlatButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.history),
+                  label: Text(
+                    'History',
+                    style: TextStyle(fontSize: 15.0),
+                  ),
+                ),
+              ),
+            ),
+          ])),
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18),
