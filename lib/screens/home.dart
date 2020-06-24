@@ -65,7 +65,9 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: FlatButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                   icon: Icon(Icons.home),
                   label: Text(
                     'Home',
@@ -82,7 +84,10 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: FlatButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(context, createRoute(Products()));
+                  },
                   icon: Icon(Icons.shopping_basket),
                   label: Text(
                     'Products',
@@ -99,7 +104,10 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: FlatButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(context, createRoute(Profile()));
+                  },
                   icon: Icon(Icons.account_circle),
                   label: Text(
                     'Profile',
@@ -116,7 +124,10 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: FlatButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+//                Navigator.push(context, createRoute(Profile()));
+                  },
                   icon: Icon(Icons.history),
                   label: Text(
                     'History',

@@ -27,47 +27,65 @@ class _ProductsState extends State<Products> {
     'Others',
   ];
 
+  List<dynamic> products = new List<dynamic>();
+  List<dynamic> visproducts = new List<dynamic>();
+  String search = '';
+
+  ScrollController scrollController = new ScrollController();
+
+  TextEditingController search_controller = new TextEditingController();
+
+  double bheight = 72;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
         appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-              size: 32,
-            ),
-          ),
-          title: Text(
-            'Products',
-            style: TextStyle(
-                color: Colors.black, fontSize: 24, fontWeight: FontWeight.w600),
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(createRoute(AddProduct()));
-          },
-          splashColor: Colors.green,
-          backgroundColor: Colors.white,
-          child: Icon(
-            Icons.add,
-            color: Colors.black,
-          ),
-        ),
-        body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SingleChildScrollView(
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(bheight),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 2,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: TextField(
+                    controller: search_controller,
+                    maxLines: 1,
+                    textInputAction: TextInputAction.search,
+                    onChanged: (s) {
+                      setState(() {
+                        search = s;
+                      });
+                    },
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.black)),
+                        labelStyle: TextStyle(color: Colors.black),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 8),
+                        labelText: 'Search',
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.black)),
+                        fillColor: Colors.white),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -91,6 +109,38 @@ class _ProductsState extends State<Products> {
                       }).toList(),
                     ),
                   ),
+                ),
+              ],
+            ),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+              size: 32,
+            ),
+          ),
+          title: Text(
+            'Products',
+            style: TextStyle(
+                color: Colors.black, fontSize: 24, fontWeight: FontWeight.w600),
+          ),
+        ),
+        body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 4,
+                  ),
                   SizedBox(
                     height: 8,
                   ),
@@ -106,6 +156,17 @@ class _ProductsState extends State<Products> {
                         return LinearProgressIndicator();
                       } else {
                         if (snap.data.documents.length != 0) {
+                          products = snap.data.documents;
+                          visproducts = products;
+                          visproducts = visproducts.where((e) {
+                            if (e['name']
+                                .toString()
+                                .toLowerCase()
+                                .contains(search.toLowerCase()))
+                              return true;
+                            else
+                              return false;
+                          }).toList();
                           return LayoutBuilder(
                             builder: (context, constraints) {
                               if (constraints.maxWidth <= 600) {
@@ -114,10 +175,10 @@ class _ProductsState extends State<Products> {
                                   crossAxisCount: 2,
                                   shrinkWrap: true,
                                   childAspectRatio: 0.825,
-                                  children: List.generate(
-                                      snap.data.documents.length, (index) {
+                                  children: List.generate(visproducts.length,
+                                      (index) {
                                     return ProductItem(
-                                      snap: snap.data.documents[index],
+                                      snap: visproducts[index],
                                     );
                                   }),
                                 );
@@ -127,9 +188,10 @@ class _ProductsState extends State<Products> {
                                   crossAxisCount: 3,
                                   shrinkWrap: true,
                                   childAspectRatio: 0.825,
-                                  children: List.generate(10, (index) {
+                                  children: List.generate(visproducts.length,
+                                      (index) {
                                     return ProductItem(
-                                      snap: snap.data.documents[index],
+                                      snap: visproducts[index],
                                     );
                                   }),
                                 );
@@ -148,7 +210,20 @@ class _ProductsState extends State<Products> {
                   ),
                 ],
               ),
-            )));
+            )),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(createRoute(AddProduct()));
+          },
+          splashColor: Colors.green,
+          backgroundColor: Colors.white,
+          child: Icon(
+            Icons.add,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
   }
 
   Route createRoute(dest) {
