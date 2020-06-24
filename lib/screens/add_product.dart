@@ -33,7 +33,7 @@ class _AddProductState extends State<AddProduct> {
   List<String> units = new List<String>();
   int count = 1;
 
-  String name, cat = 'Select any Category', desc;
+  String name, cat = 'Others', desc;
 
   TextEditingController desc_controller = new TextEditingController();
 
@@ -44,7 +44,7 @@ class _AddProductState extends State<AddProduct> {
     price_controller.add(new TextEditingController());
     oprice_controller.add(new TextEditingController());
     quan_controller.add(new TextEditingController());
-    units.add('kg');
+    units.add('-');
     prices.add(0);
     oprices.add(0);
     quans.add(0);
@@ -148,11 +148,11 @@ class _AddProductState extends State<AddProduct> {
               keyboardType: TextInputType.number,
               validator: (pprice) {
                 if (pprice.isEmpty) {
-                  return "*Required";
+                  quans[index] = 0;
                 } else {
                   quans[index] = int.parse(pprice);
-                  return null;
                 }
+                return null;
               },
               decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
@@ -185,7 +185,7 @@ class _AddProductState extends State<AddProduct> {
                 iconSize: 16,
                 isExpanded: true,
                 value: units[index],
-                items: <String>['kg', 'gm', 'l', 'ml', 'units']
+                items: <String>['-', 'kg', 'gm', 'l', 'ml', 'units']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -232,7 +232,7 @@ class _AddProductState extends State<AddProduct> {
     final StorageUploadTask uploadTask = FirebaseStorage()
         .ref()
         .child('Images/isnapur/groceries')
-        .child(name)
+        .child('${name}_groceries_isnapur')
         .putFile(image);
     final StorageTaskSnapshot snapshot = await uploadTask.onComplete;
     String img = await snapshot.ref.getDownloadURL();
@@ -241,7 +241,7 @@ class _AddProductState extends State<AddProduct> {
         .collection('locations')
         .document('isnapur')
         .collection('groceries')
-        .document(name)
+        .document('${name}_groceries_isnapur')
         .setData(product);
     setState(() {
       uploading = false;
@@ -264,20 +264,13 @@ class _AddProductState extends State<AddProduct> {
                   uploading = true;
                 });
                 if (formkey.currentState.validate()) {
-                  if (cat != 'Select any Category') {
-                    if (image != null) {
-                      uploadProduct();
-                    } else {
-                      setState(() {
-                        uploading = false;
-                      });
-                      _showDialog('Please Select an Image');
-                    }
+                  if (image != null) {
+                    uploadProduct();
                   } else {
                     setState(() {
                       uploading = false;
                     });
-                    _showDialog('Please Select a category');
+                    _showDialog('Please Select an Image');
                   }
                 } else {
                   setState(() {
@@ -428,7 +421,7 @@ class _AddProductState extends State<AddProduct> {
                                     isExpanded: true,
                                     value: cat,
                                     items: <String>[
-                                      'Select any Category',
+                                      'Others',
                                       'Dry Fruits and Masala',
                                       'Dals & Pulses',
                                       'Rice & Rice Products',
@@ -533,12 +526,13 @@ class _AddProductState extends State<AddProduct> {
                                                 quans.removeLast();
                                                 count--;
                                                 listKey.currentState.removeItem(
-                                                    /*_items.length - 1*/ count,
+                                                    /*_items.length - 1*/
+                                                    count,
                                                     (_, animation) =>
                                                         _buildItem(
                                                             context,
-                                                            /*_items.length - 1*/ count -
-                                                                1,
+                                                            /*_items.length - 1*/
+                                                            count - 1,
                                                             animation),
                                                     duration: const Duration(
                                                         milliseconds: 500));
@@ -560,15 +554,15 @@ class _AddProductState extends State<AddProduct> {
                                                       new TextEditingController());
                                                   quan_controller.add(
                                                       new TextEditingController());
-                                                  units.add('kg');
+                                                  units.add('-');
                                                   prices.add(0);
                                                   oprices.add(0);
                                                   quans.add(0);
                                                   count++;
                                                   listKey.currentState
                                                       .insertItem(
-                                                          /*_items.length*/ count -
-                                                              1,
+                                                          /*_items.length*/
+                                                          count - 1,
                                                           duration:
                                                               const Duration(
                                                                   milliseconds:

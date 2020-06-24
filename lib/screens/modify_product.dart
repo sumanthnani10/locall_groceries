@@ -36,7 +36,7 @@ class _ModifyProductState extends State<ModifyProduct> {
   List<String> units = new List<String>();
   int count;
 
-  String name, cat, desc;
+  String name, cat, desc, oname;
   bool imageChanged = false;
 
   TextEditingController desc_controller = new TextEditingController();
@@ -48,6 +48,7 @@ class _ModifyProductState extends State<ModifyProduct> {
     cat = widget.snap['category'];
     count = widget.snap['prices'];
     name = widget.snap['name'];
+    oname = name;
     desc = widget.snap['description'];
     name_controller.text = widget.snap['name'];
     desc_controller.text = widget.snap['description'];
@@ -56,13 +57,16 @@ class _ModifyProductState extends State<ModifyProduct> {
       oprice_controller.add(new TextEditingController());
       quan_controller.add(new TextEditingController());
       units.add(widget.snap['unit_${i + 1}']);
+      print(widget.snap['unit_${i + 1}']);
       prices.add(widget.snap['price_${i + 1}']);
       oprices.add(widget.snap['mrp_${i + 1}']);
       quans.add(widget.snap['quantity_${i + 1}']);
       buildItem(context, i, null, widget.snap);
       price_controller[i].text = '${widget.snap['price_${i + 1}']}';
-      oprice_controller[i].text = '${widget.snap['mrp_${i + 1}']}';
-      quan_controller[i].text = '${widget.snap['quantity_${i + 1}']}';
+      if (widget.snap['mrp_${i + 1}'] != widget.snap['price_${i + 1}'])
+        oprice_controller[i].text = '${widget.snap['mrp_${i + 1}']}';
+      if (widget.snap['quantity_${i + 1}'] != 0)
+        quan_controller[i].text = '${widget.snap['quantity_${i + 1}']}';
     }
   }
 
@@ -164,11 +168,11 @@ class _ModifyProductState extends State<ModifyProduct> {
               keyboardType: TextInputType.number,
               validator: (pprice) {
                 if (pprice.isEmpty) {
-                  return "*Required";
+                  quans[index] = 0;
                 } else {
                   quans[index] = int.parse(pprice);
-                  return null;
                 }
+                return null;
               },
               decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
@@ -201,7 +205,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                 iconSize: 16,
                 isExpanded: true,
                 value: units[index],
-                items: <String>['kg', 'gm', 'l', 'ml', 'units']
+                items: <String>['-', 'kg', 'gm', 'l', 'ml', 'units']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -311,11 +315,11 @@ class _ModifyProductState extends State<ModifyProduct> {
               keyboardType: TextInputType.number,
               validator: (pprice) {
                 if (pprice.isEmpty) {
-                  return "*Required";
+                  quans[index] = 0;
                 } else {
                   quans[index] = int.parse(pprice);
-                  return null;
                 }
+                return null;
               },
               decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
@@ -348,7 +352,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                 iconSize: 16,
                 isExpanded: true,
                 value: units[index],
-                items: <String>['kg', 'gm', 'l', 'ml', 'units']
+                items: <String>['-', 'kg', 'gm', 'l', 'ml', 'units']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -397,11 +401,19 @@ class _ModifyProductState extends State<ModifyProduct> {
       product['unit_${i}'] = units[i - 1];
     }
     product['image'] = widget.snap['image'];
+    if (oname != name) {
+      await Firestore.instance
+          .collection('locations')
+          .document('isnapur')
+          .collection('groceries')
+          .document(oname)
+          .delete();
+    }
     if (imageChanged) {
       final StorageUploadTask uploadTask = FirebaseStorage()
           .ref()
           .child('Images/isnapur/groceries')
-          .child(name)
+          .child('${name}_groceries_isnapur')
           .putFile(image);
       final StorageTaskSnapshot snapshot = await uploadTask.onComplete;
       String img = await snapshot.ref.getDownloadURL();
@@ -554,10 +566,17 @@ class _ModifyProductState extends State<ModifyProduct> {
                                 TextFormField(
                                   controller: name_controller,
                                   maxLines: 1,
-                                  enabled: false,
                                   onFieldSubmitted: (term) {
                                     FocusScope.of(context).unfocus();
                                     FocusScope.of(context).nextFocus();
+                                  },
+                                  validator: (pname) {
+                                    if (pname.isEmpty) {
+                                      return "Please enter Product Name.";
+                                    } else {
+                                      name = pname;
+                                      return null;
+                                    }
                                   },
                                   textInputAction: TextInputAction.next,
                                   keyboardType: TextInputType.text,
@@ -608,7 +627,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                                     isExpanded: true,
                                     value: cat,
                                     items: <String>[
-                                      'Select any Category',
+                                      'Others',
                                       'Dry Fruits and Masala',
                                       'Dals & Pulses',
                                       'Rice & Rice Products',
@@ -740,7 +759,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                                                       new TextEditingController());
                                                   quan_controller.add(
                                                       new TextEditingController());
-                                                  units.add('kg');
+                                                  units.add('-');
                                                   prices.add(0);
                                                   oprices.add(0);
                                                   quans.add(0);

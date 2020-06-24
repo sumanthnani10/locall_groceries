@@ -9,6 +9,24 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
+  List<String> categories = [
+    'All',
+    'Dry Fruits and Masala',
+    'Dals & Pulses',
+    'Rice & Rice Products',
+    'Atta & Flour',
+    'Salt & Sugar',
+    'Snacks and Food',
+    'Soaps and Shampoo',
+    'Cleaners',
+    'Hair Oils',
+    'Body Sprays',
+    'Chocolates',
+    'Personal Hygiene',
+    'Agarbathhi',
+    'Others',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,116 +72,23 @@ class _ProductsState extends State<Products> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
+                      children: List.generate(categories.length, (index) {
+                        return Container(
                           padding: const EdgeInsets.symmetric(
                               vertical: 2, horizontal: 8),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(16),
-                              color: Colors.black),
+                              color:
+                                  index == 0 ? Colors.black : Colors.black12),
                           margin: const EdgeInsets.symmetric(horizontal: 4),
                           child: Text(
-                            'All',
-                            style: TextStyle(color: Colors.white),
+                            categories[index],
+                            style: TextStyle(
+                                color:
+                                    index == 0 ? Colors.white : Colors.black),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.black12),
-                          child: Text(
-                            'Grains',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.black12),
-                          child: Text(
-                            'Oils',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.black12),
-                          child: Text(
-                            'Cookies',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.black12),
-                          child: Text(
-                            'Drinks',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.black12),
-                          child: Text(
-                            'Bread',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.black12),
-                          child: Text(
-                            'Fruits',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.black12),
-                          child: Text(
-                            'Vegetables',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.black12),
-                          child: Text(
-                            'Diary',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ],
+                        );
+                      }).toList(),
                     ),
                   ),
                   SizedBox(

@@ -242,37 +242,48 @@ class _ProductItemState extends State<ProductItem>
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    'Rs.${widget.snap['price_1']}/${widget.snap['quantity_1']}${widget.snap['unit_1']}',
+                                    widget.snap['quantity_1'].toString() != '0'
+                                        ? 'Rs.${widget.snap['price_1']}/${widget.snap['quantity_1']}${widget.snap['unit_1']}'
+                                        : 'Rs.${widget.snap['price_1']}',
                                     style: TextStyle(
                                         fontSize: 13, color: Colors.black),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    'Rs.${widget.snap['mrp_1']}',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.red,
-                                        decoration: TextDecoration.lineThrough,
-                                        decorationColor: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                  SizedBox(
-                                    width: 4,
-                                  ),
-                                  Text(
-                                    '(${((widget.snap['mrp_1'] - widget.snap['price_1']) / widget.snap['mrp_1'] * 100).round()}%)',
-                                    style: TextStyle(
-                                        fontSize: 8,
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.w600),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
+                                  if (widget.snap['price_1'] !=
+                                      widget.snap['mrp_1'])
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                  if (widget.snap['price_1'] !=
+                                      widget.snap['mrp_1'])
+                                    Text(
+                                      'Rs.${widget.snap['mrp_1']}',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.red,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          decorationColor: Colors.black),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  if (widget.snap['price_1'] !=
+                                      widget.snap['mrp_1'])
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                  if (widget.snap['price_1'] !=
+                                      widget.snap['mrp_1'])
+                                    Text(
+                                      '(${((widget.snap['mrp_1'] - widget.snap['price_1']) / widget.snap['mrp_1'] * 100).round()}%)',
+                                      style: TextStyle(
+                                          fontSize: 8,
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.w600),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
                                 ],
                               ),
                             ),
