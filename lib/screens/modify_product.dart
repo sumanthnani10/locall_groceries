@@ -36,7 +36,7 @@ class _ModifyProductState extends State<ModifyProduct> {
   List<String> units = new List<String>();
   int count;
 
-  String name, cat, desc, oname;
+  String name, cat, desc;
   bool imageChanged = false;
 
   TextEditingController desc_controller = new TextEditingController();
@@ -48,7 +48,6 @@ class _ModifyProductState extends State<ModifyProduct> {
     cat = widget.snap['category'];
     count = widget.snap['prices'];
     name = widget.snap['name'];
-    oname = name;
     desc = widget.snap['description'];
     name_controller.text = widget.snap['name'];
     desc_controller.text = widget.snap['description'];
@@ -388,11 +387,14 @@ class _ModifyProductState extends State<ModifyProduct> {
   }
 
   uploadProduct() async {
+    FocusScope.of(context).unfocus();
+
     product = {
       'name': name,
       'category': cat,
       'prices': count,
-      'description': desc
+      'description': desc,
+      'product_id': widget.snap['product_id']
     };
     for (int i = 1; i <= count; i++) {
       product['price_${i}'] = prices[i - 1];
@@ -401,19 +403,12 @@ class _ModifyProductState extends State<ModifyProduct> {
       product['unit_${i}'] = units[i - 1];
     }
     product['image'] = widget.snap['image'];
-    if (oname != name) {
-      await Firestore.instance
-          .collection('locations')
-          .document('isnapur')
-          .collection('groceries')
-          .document(oname)
-          .delete();
-    }
+
     if (imageChanged) {
       final StorageUploadTask uploadTask = FirebaseStorage()
           .ref()
           .child('Images/isnapur/groceries')
-          .child('${name}_groceries_isnapur')
+          .child(widget.snap['product_id'])
           .putFile(image);
       final StorageTaskSnapshot snapshot = await uploadTask.onComplete;
       String img = await snapshot.ref.getDownloadURL();
@@ -423,7 +418,7 @@ class _ModifyProductState extends State<ModifyProduct> {
         .collection('locations')
         .document('isnapur')
         .collection('groceries')
-        .document(name)
+        .document(widget.snap['product_id'])
         .setData(product);
     setState(() {
       uploading = false;

@@ -217,6 +217,8 @@ class _AddProductState extends State<AddProduct> {
   }
 
   uploadProduct() async {
+    FocusScope.of(context).unfocus();
+
     product = {
       'name': name,
       'category': cat,
@@ -229,19 +231,28 @@ class _AddProductState extends State<AddProduct> {
       product['quantity_${i}'] = quans[i - 1];
       product['unit_${i}'] = units[i - 1];
     }
-    final StorageUploadTask uploadTask = FirebaseStorage()
-        .ref()
-        .child('Images/isnapur/groceries')
-        .child('${name}_groceries_isnapur')
-        .putFile(image);
-    final StorageTaskSnapshot snapshot = await uploadTask.onComplete;
-    String img = await snapshot.ref.getDownloadURL();
-    product['image'] = img;
+
     await Firestore.instance
         .collection('locations')
         .document('isnapur')
         .collection('groceries')
-        .document('${name}_groceries_isnapur')
+        .add({}).then(
+            (value) async => product['product_id'] = await value.documentID);
+
+    final StorageUploadTask uploadTask = FirebaseStorage()
+        .ref()
+        .child('Images/isnapur/groceries')
+        .child(product['product_id'])
+        .putFile(image);
+    final StorageTaskSnapshot snapshot = await uploadTask.onComplete;
+    String img = await snapshot.ref.getDownloadURL();
+    product['image'] = img;
+
+    await Firestore.instance
+        .collection('locations')
+        .document('isnapur')
+        .collection('groceries')
+        .document(product['product_id'])
         .setData(product);
     setState(() {
       uploading = false;

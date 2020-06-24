@@ -309,13 +309,13 @@ class _ProductItemState extends State<ProductItem>
                             await FirebaseStorage.instance
                                 .ref()
                                 .child(
-                                    'Images/isnapur/groceries/${widget.snap['name']}')
+                                    'Images/isnapur/groceries/${widget.snap['product_id']}')
                                 .delete();
                             await Firestore.instance
                                 .collection('locations')
                                 .document('isnapur')
                                 .collection('groceries')
-                                .document(widget.snap['name'])
+                                .document(widget.snap['product_id'])
                                 .delete();
                           },
                           child: Container(
