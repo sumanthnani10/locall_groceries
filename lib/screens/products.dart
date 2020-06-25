@@ -29,17 +29,34 @@ class _ProductsState extends State<Products> {
 
   List<dynamic> products = new List<dynamic>();
   List<dynamic> visproducts = new List<dynamic>();
-  String search = '';
+  String search = '', viewCat = 'All';
 
   ScrollController scrollController = new ScrollController();
 
   TextEditingController search_controller = new TextEditingController();
 
-  double bheight = 72;
+  double bheight = 80;
+  bool gotDetails = false;
 
   @override
   void initState() {
     super.initState();
+    getProducts();
+  }
+
+  getProducts() async {
+    await Firestore.instance
+        .collection('locations')
+        .document('isnapur')
+        .collection('groceries')
+        .orderBy('name')
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        products = event.documents;
+        gotDetails = true;
+      });
+    });
   }
 
   @override
@@ -91,19 +108,29 @@ class _ProductsState extends State<Products> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: List.generate(categories.length, (index) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 8),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color:
-                                  index == 0 ? Colors.black : Colors.black12),
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
-                            categories[index],
-                            style: TextStyle(
-                                color:
-                                    index == 0 ? Colors.white : Colors.black),
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              viewCat = categories[index];
+                            });
+                          },
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 1000),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2, horizontal: 8),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: viewCat == categories[index]
+                                    ? Colors.black
+                                    : Colors.black12),
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            child: Text(
+                              categories[index],
+                              style: TextStyle(
+                                  color: viewCat == categories[index]
+                                      ? Colors.white
+                                      : Colors.black),
+                            ),
                           ),
                         );
                       }).toList(),
@@ -141,24 +168,13 @@ class _ProductsState extends State<Products> {
                   SizedBox(
                     height: 4,
                   ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  StreamBuilder(
-                    stream: Firestore.instance
-                        .collection('locations')
-                        .document('isnapur')
-                        .collection('groceries')
-                        .orderBy('name')
-                        .snapshots(),
-                    builder: (context, snap) {
-                      if (snap.connectionState == ConnectionState.waiting) {
-                        return LinearProgressIndicator();
-                      } else {
-                        if (snap.data.documents.length != 0) {
-                          products = snap.data.documents;
-                          visproducts = products;
-                          visproducts = visproducts.where((e) {
+                  if (!gotDetails) LinearProgressIndicator(),
+                  if (gotDetails && products.length != 0)
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        visproducts = products;
+                        visproducts = visproducts.where((e) {
+                          if (viewCat == 'All') {
                             if (e['name']
                                 .toString()
                                 .toLowerCase()
@@ -166,38 +182,46 @@ class _ProductsState extends State<Products> {
                               return true;
                             else
                               return false;
-                          }).toList();
-                          return LayoutBuilder(
-                            builder: (context, constraints) {
-                              if (constraints.maxWidth <= 600) {
-                                return GridView.count(
-                                  physics: BouncingScrollPhysics(),
-                                  crossAxisCount: 2,
-                                  shrinkWrap: true,
-                                  childAspectRatio: 0.825,
-                                  children: List.generate(visproducts.length,
-                                      (index) {
-                                    return ProductItem(
-                                      snap: visproducts[index],
-                                    );
-                                  }),
+                          } else {
+                            print(e['category']);
+                            if (e['name']
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(search.toLowerCase()) &&
+                                e['category'] == viewCat)
+                              return true;
+                            else
+                              return false;
+                          }
+                        }).toList();
+                        if (visproducts.length != 0) {
+                          if (constraints.maxWidth <= 600) {
+                            return GridView.count(
+                              physics: BouncingScrollPhysics(),
+                              crossAxisCount: 2,
+                              shrinkWrap: true,
+                              childAspectRatio: 0.825,
+                              children:
+                                  List.generate(visproducts.length, (index) {
+                                return ProductItem(
+                                  snap: visproducts[index],
                                 );
-                              } else {
-                                return GridView.count(
-                                  physics: BouncingScrollPhysics(),
-                                  crossAxisCount: 3,
-                                  shrinkWrap: true,
-                                  childAspectRatio: 0.825,
-                                  children: List.generate(visproducts.length,
-                                      (index) {
-                                    return ProductItem(
-                                      snap: visproducts[index],
-                                    );
-                                  }),
+                              }),
+                            );
+                          } else {
+                            return GridView.count(
+                              physics: BouncingScrollPhysics(),
+                              crossAxisCount: 3,
+                              shrinkWrap: true,
+                              childAspectRatio: 0.825,
+                              children:
+                                  List.generate(visproducts.length, (index) {
+                                return ProductItem(
+                                  snap: visproducts[index],
                                 );
-                              }
-                            },
-                          );
+                              }),
+                            );
+                          }
                         } else {
                           return Center(
                               child: Padding(
@@ -205,9 +229,14 @@ class _ProductsState extends State<Products> {
                             child: Text('No Products'),
                           ));
                         }
-                      }
-                    },
-                  ),
+                      },
+                    ),
+                  if (gotDetails && products.length == 0)
+                    Center(
+                        child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 32),
+                      child: Text('No Products'),
+                    ))
                 ],
               ),
             )),
