@@ -224,7 +224,8 @@ class _AddProductState extends State<AddProduct> {
       'name': subname == '' ? name : name + '(' + subname + ')',
       'category': cat,
       'prices': count,
-      'description': desc
+      'description': desc,
+      'stock': true
     };
     for (int i = 1; i <= count; i++) {
       product['price_${i}'] = prices[i - 1];

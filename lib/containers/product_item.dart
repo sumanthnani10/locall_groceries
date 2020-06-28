@@ -22,8 +22,11 @@ class _ProductItemState extends State<ProductItem>
 
   bool loading = false;
 
+  bool stock;
+
   @override
   void initState() {
+    stock = widget.snap['stock'];
     super.initState();
     _controller = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1000) /*, value: 0.1*/);
@@ -39,7 +42,6 @@ class _ProductItemState extends State<ProductItem>
   }
 
   void _showDialog() {
-    // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -54,13 +56,16 @@ class _ProductItemState extends State<ProductItem>
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: AspectRatio(
-                    aspectRatio: 3 / 2,
-                    child: Image(
-                      image: NetworkImage(widget.snap['image']),
-                      fit: BoxFit.cover,
+                Hero(
+                  tag: widget.snap['product_id'],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: AspectRatio(
+                      aspectRatio: 3 / 2,
+                      child: Image(
+                        image: NetworkImage(widget.snap['image']),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -80,6 +85,38 @@ class _ProductItemState extends State<ProductItem>
                   child: Text(
                     widget.snap['category'],
                     style: TextStyle(fontSize: 10, color: Colors.black54),
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Stock :',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Switch.adaptive(
+                        value: stock,
+                        onChanged: (c) async {
+                          stock = c;
+                          await Firestore.instance
+                              .collection('locations')
+                              .document('isnapur')
+                              .collection('groceries')
+                              .document(widget.snap['product_id'])
+                              .updateData({'stock': c});
+                        },
+                        activeColor: Colors.green,
+                        activeTrackColor: Colors.white,
+                        inactiveThumbColor: Colors.red,
+                        inactiveTrackColor: Colors.white,
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
@@ -214,7 +251,7 @@ class _ProductItemState extends State<ProductItem>
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
                             Hero(
-                              tag: widget.snap['name'],
+                              tag: widget.snap['product_id'],
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: AspectRatio(
@@ -251,7 +288,7 @@ class _ProductItemState extends State<ProductItem>
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(4.0),
+                              padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -299,6 +336,52 @@ class _ProductItemState extends State<ProductItem>
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                     ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  /*Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        'Stock',
+                                        style: TextStyle(fontSize: 10),
+                                      ),
+                                      Text('10 kg',
+                                          style: TextStyle(fontSize: 12))
+                                    ],
+                                  ),*/
+                                  Text(
+                                    'Stock :',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Switch.adaptive(
+                                    value: stock,
+                                    onChanged: (c) async {
+                                      setState(() {
+                                        stock = c;
+                                      });
+                                      /*await Firestore.instance
+                                          .collection('locations')
+                                          .document('isnapur')
+                                          .collection('groceries')
+                                          .document(widget.snap['product_id'])
+                                          .updateData({'stock': c});*/
+                                    },
+                                    activeColor: Colors.green,
+                                    activeTrackColor: Colors.white,
+                                    inactiveThumbColor: Colors.red,
+                                    inactiveTrackColor: Colors.white,
+                                  ),
                                 ],
                               ),
                             ),

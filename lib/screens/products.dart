@@ -52,10 +52,12 @@ class _ProductsState extends State<Products> {
         .orderBy('name')
         .snapshots()
         .listen((event) {
-      setState(() {
-        products = event.documents;
-        gotDetails = true;
-      });
+      if (mounted) {
+        setState(() {
+          products = event.documents;
+          gotDetails = true;
+        });
+      }
     });
   }
 
@@ -86,6 +88,19 @@ class _ProductsState extends State<Products> {
                       });
                     },
                     decoration: InputDecoration(
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            setState(() {
+                              search_controller.text = '';
+                              search = '';
+                            });
+                          },
+                          child: Icon(
+                            Icons.clear,
+                            color: search == '' ? Colors.white : Colors.black,
+                            size: 16,
+                          ),
+                        ),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: Colors.black)),
@@ -200,7 +215,7 @@ class _ProductsState extends State<Products> {
                               physics: BouncingScrollPhysics(),
                               crossAxisCount: 2,
                               shrinkWrap: true,
-                              childAspectRatio: 0.825,
+                              childAspectRatio: 0.675,
                               children:
                                   List.generate(visproducts.length, (index) {
                                 return ProductItem(
@@ -211,9 +226,9 @@ class _ProductsState extends State<Products> {
                           } else {
                             return GridView.count(
                               physics: BouncingScrollPhysics(),
-                              crossAxisCount: 3,
+                              crossAxisCount: 4,
                               shrinkWrap: true,
-                              childAspectRatio: 0.825,
+                              childAspectRatio: 0.65,
                               children:
                                   List.generate(visproducts.length, (index) {
                                 return ProductItem(
