@@ -370,12 +370,12 @@ class _ProductItemState extends State<ProductItem>
                                       setState(() {
                                         stock = c;
                                       });
-                                      /*await Firestore.instance
+                                      await Firestore.instance
                                           .collection('locations')
                                           .document('isnapur')
                                           .collection('groceries')
                                           .document(widget.snap['product_id'])
-                                          .updateData({'stock': c});*/
+                                          .updateData({'stock': c});
                                     },
                                     activeColor: Colors.green,
                                     activeTrackColor: Colors.white,
