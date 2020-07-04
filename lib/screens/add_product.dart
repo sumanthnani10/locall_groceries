@@ -225,7 +225,8 @@ class _AddProductState extends State<AddProduct> {
       'category': cat,
       'prices': count,
       'description': desc,
-      'stock': true
+      'stock': true,
+      'creation': FieldValue.serverTimestamp()
     };
     for (int i = 1; i <= count; i++) {
       product['price_${i}'] = prices[i - 1];
