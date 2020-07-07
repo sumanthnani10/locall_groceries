@@ -21,6 +21,8 @@ class _ModifyProductState extends State<ModifyProduct> {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   Map<String, dynamic> product = new Map<String, dynamic>();
   bool uploading = false;
+  bool stock = true;
+  var time = FieldValue.serverTimestamp();
 
   File image;
   final picker = ImagePicker();
@@ -394,8 +396,15 @@ class _ModifyProductState extends State<ModifyProduct> {
       'category': cat,
       'prices': count,
       'description': desc,
-      'product_id': widget.snap['product_id']
+      'product_id': widget.snap['product_id'],
+      'stock': widget.snap['product_id']['stock'] == null
+          ? stock
+          : widget.snap['product_id']['stock'],
+      'creation': widget.snap['product_id']['creation'] == null
+          ? time
+          : widget.snap['product_id']['creation']
     };
+
     for (int i = 1; i <= count; i++) {
       product['price_${i}'] = prices[i - 1];
       product['mrp_${i}'] = oprices[i - 1];
@@ -616,11 +625,19 @@ class _ModifyProductState extends State<ModifyProduct> {
                                     value: cat,
                                     items: <String>[
                                       'Others',
-                                      'Dry Fruits and Masala',
+                                      'Dry Fruits',
+                                      'Masala',
+                                      'Spices',
+                                      'Edible Oils',
                                       'Dals & Pulses',
                                       'Rice & Rice Products',
                                       'Atta & Flour',
-                                      'Salt & Sugar',
+                                      'Salt, Sugar & Tea',
+                                      'Stationary',
+                                      'Beverages',
+                                      'Patanjali',
+                                      'Vegetables',
+                                      'Diary',
                                       'Snacks and Food',
                                       'Soaps and Shampoo',
                                       'Cleaners',
@@ -628,7 +645,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                                       'Body Sprays',
                                       'Chocolates',
                                       'Personal Hygiene',
-                                      'Agarbathhi'
+                                      'Pooja Products',
                                     ].map<DropdownMenuItem<String>>(
                                         (String value) {
                                       return DropdownMenuItem<String>(

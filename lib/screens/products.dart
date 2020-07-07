@@ -11,19 +11,27 @@ class Products extends StatefulWidget {
 class _ProductsState extends State<Products> {
   List<String> categories = [
     'All',
-    'Dry Fruits and Masala',
-    'Dals & Pulses',
-    'Rice & Rice Products',
     'Atta & Flour',
-    'Salt & Sugar',
-    'Snacks and Food',
-    'Soaps and Shampoo',
-    'Cleaners',
-    'Hair Oils',
+    'Beverages',
     'Body Sprays',
     'Chocolates',
+    'Cleaners',
+    'Dals & Pulses',
+    'Diary',
+    'Dry Fruits',
+    'Edible Oils',
+    'Hair Oils',
+    'Masala',
+    'Patanjali',
     'Personal Hygiene',
-    'Agarbathhi',
+    'Pooja Products',
+    'Rice & Rice Products',
+    'Salt, Sugar & Tea',
+    'Snacks and Food',
+    'Soaps and Shampoo',
+    'Spices',
+    'Stationary',
+    'Vegetables',
     'Others',
   ];
 
@@ -198,7 +206,6 @@ class _ProductsState extends State<Products> {
                             else
                               return false;
                           } else {
-                            print(e['category']);
                             if (e['name']
                                     .toString()
                                     .toLowerCase()
@@ -218,6 +225,11 @@ class _ProductsState extends State<Products> {
                               childAspectRatio: 0.675,
                               children:
                                   List.generate(visproducts.length, (index) {
+                                /*if (visproducts[index]['stock'] == null)
+                                  print('${visproducts[index]['name']} stock');
+                                if (visproducts[index]['creation'] == null)
+                                  print(
+                                      '${visproducts[index]['name']} creation');*/
                                 return ProductItem(
                                   snap: visproducts[index],
                                 );
