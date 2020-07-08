@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:locallgroceries/containers/order_container.dart';
@@ -59,12 +60,15 @@ class _ItemListState extends State<ItemList> {
                 OrderContainer(
                   color: Colors.yellow,
                   splashColor: Colors.black12,
-                  customerName: 'Sumanth',
+                  customerName:
+                      '${Storage.customers['${widget.snap['details']['customer_id']}']['name']}',
                   itemnumbers: widget.snap['length'],
                   items: '',
                   onTap: () {},
-                  address: '12-80/2, srinagar colony, patancheru',
-                  phone: '9100x0xxxx',
+                  address:
+                      '${Storage.customers['${widget.snap['details']['customer_id']}']['address']}',
+                  phone:
+                      '${Storage.customers['${widget.snap['details']['customer_id']}']['mobile']}',
                   total: '${widget.snap['total']}',
                 ),
                 DataTable(
@@ -218,13 +222,24 @@ class _ItemListState extends State<ItemList> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
                 color: Colors.redAccent,
-                onPressed: () async {},
+                onPressed: () async {
+                  showLoadingDialog(context, 'Rejecting');
+                  await Firestore.instance
+                      .collection('orders')
+                      .document(widget.snap['order_id'])
+                      .updateData({
+                    'details.stage': 'Rejected',
+                    'time.rejected': FieldValue.serverTimestamp()
+                  });
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
                 icon: Icon(
                   Icons.close,
                   color: Colors.white,
                 ),
                 label: Text(
-                  'Reject',
+                  'Reject ',
                   style: TextStyle(color: Colors.white),
                 )),
             SizedBox(
@@ -235,7 +250,18 @@ class _ItemListState extends State<ItemList> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
                 color: Colors.lightGreen,
-                onPressed: () async {},
+                onPressed: () async {
+                  showLoadingDialog(context, 'Accepting');
+                  await Firestore.instance
+                      .collection('orders')
+                      .document(widget.snap['order_id'])
+                      .updateData({
+                    'details.stage': 'Accepted',
+                    'time.accepted': FieldValue.serverTimestamp()
+                  });
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
                 icon: Icon(
                   Icons.check,
                   color: Colors.white,
@@ -247,6 +273,36 @@ class _ItemListState extends State<ItemList> {
           ],
         ),
       ),
+    );
+  }
+
+  showLoadingDialog(BuildContext context, String title) {
+    // show the dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          contentPadding: const EdgeInsets.all(8),
+          children: <Widget>[
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(title)
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
