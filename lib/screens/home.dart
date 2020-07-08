@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:locallgroceries/containers/order_container.dart';
 import 'package:locallgroceries/screens/profile.dart';
-
-import 'file:///C:/Users/suman/StudioProjects/locall_groceries/lib/containers/order_container.dart';
+import 'package:locallgroceries/storage.dart';
 
 import 'item_list.dart';
 import 'products.dart';
@@ -15,6 +16,27 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    getProducts();
+  }
+
+  getProducts() async {
+    await Firestore.instance
+        .collection('locations')
+        .document('isnapur')
+        .collection('groceries')
+        .orderBy('name')
+        .snapshots()
+        .listen((event) {
+      if (mounted) {
+        setState(() {
+          Storage.productsList = event.documents;
+          Storage.products.clear();
+          Storage.productsList.forEach((element) {
+            Storage.products[element.documentID] = element;
+          });
+        });
+      }
+    });
   }
 
   @override
@@ -217,7 +239,42 @@ class _HomeState extends State<Home> {
                 )
               ],
             ),
-            OrderContainer(
+            StreamBuilder(
+              stream: Firestore.instance
+                  .collection('locations')
+                  .document('isnapur')
+                  .collection('groceries_orders')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return LinearProgressIndicator();
+                } else {
+                  if (!snapshot.hasData)
+                    return Text('No Orders');
+                  else {
+                    return ListView.builder(
+                        itemCount: snapshot.data.documents.length,
+                        shrinkWrap: true,
+                        itemBuilder: (_, index) {
+                          var snap = snapshot.data.documents[index].data;
+                          return OrderContainer(
+                              onTap: () {
+                                Navigator.of(context).push(createRoute(ItemList(
+                                  snap: snap,
+                                )));
+                              },
+                              splashColor: Colors.orange,
+                              color: Color(0xffffaf00),
+                              customerName: snap['customer_id'],
+                              itemnumbers: snap['length'],
+                              items:
+                                  'Small Fresh Fish,Handmade Granite Keyboard,Handmade');
+                        });
+                  }
+                }
+              },
+            ),
+            /*OrderContainer(
                 onTap: () {
                   Navigator.of(context).push(createRoute(ItemList()));
                 },
@@ -225,7 +282,7 @@ class _HomeState extends State<Home> {
                 color: Color(0xffffaf00),
                 customerName: 'Sumanth',
                 itemnumbers: 10,
-                items: 'Small Fresh Fish,Handmade Granite Keyboard,Handmade')
+                items: 'Small Fresh Fish,Handmade Granite Keyboard,Handmade')*/
           ],
         ),
       ),

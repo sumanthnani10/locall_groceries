@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:locallgroceries/containers/product_item.dart';
 import 'package:locallgroceries/screens/add_product.dart';
+import 'package:locallgroceries/storage.dart';
 
 class Products extends StatefulWidget {
   @override
@@ -34,8 +35,6 @@ class _ProductsState extends State<Products> {
     'Vegetables',
     'Others',
   ];
-
-  List<dynamic> products = new List<dynamic>();
   List<dynamic> visproducts = new List<dynamic>();
   String search = '', viewCat = 'All';
 
@@ -44,29 +43,10 @@ class _ProductsState extends State<Products> {
   TextEditingController search_controller = new TextEditingController();
 
   double bheight = 80;
-  bool gotDetails = false;
 
   @override
   void initState() {
     super.initState();
-    getProducts();
-  }
-
-  getProducts() async {
-    await Firestore.instance
-        .collection('locations')
-        .document('isnapur')
-        .collection('groceries')
-        .orderBy('name')
-        .snapshots()
-        .listen((event) {
-      if (mounted) {
-        setState(() {
-          products = event.documents;
-          gotDetails = true;
-        });
-      }
-    });
   }
 
   @override
@@ -191,11 +171,10 @@ class _ProductsState extends State<Products> {
                   SizedBox(
                     height: 4,
                   ),
-                  if (!gotDetails) LinearProgressIndicator(),
-                  if (gotDetails && products.length != 0)
+                  if (Storage.productsList.length != 0)
                     LayoutBuilder(
                       builder: (context, constraints) {
-                        visproducts = products;
+                        visproducts = Storage.productsList;
                         visproducts = visproducts.where((e) {
                           if (viewCat == 'All') {
                             if (e['name']
@@ -258,7 +237,7 @@ class _ProductsState extends State<Products> {
                         }
                       },
                     ),
-                  if (gotDetails && products.length == 0)
+                  if (Storage.productsList.length == 0)
                     Center(
                         child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 32),
