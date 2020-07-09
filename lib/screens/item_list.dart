@@ -26,10 +26,40 @@ class _ItemListState extends State<ItemList> {
     {"Product": "BBBB", "Quantity": "9", "Price": "109"},
     {"Product": "CCCCCC", "Quantity": "1", "Price": "103"}
   ];*/
+  List<Color> colors = [
+    Color(0xfffff700),
+    Color(0xff00fd5d),
+    Colors.cyanAccent,
+    Colors.redAccent,
+  ];
+  List<Color> splashColors = [
+    Colors.yellow,
+    Colors.green,
+    Colors.cyan,
+    Colors.red
+  ];
 
   @override
   Widget build(BuildContext context) {
-//    print('${widget.snap['products']} 99');
+    int c = 0;
+    switch (widget.snap['details']['stage']) {
+      case 'Order Placed':
+        c = 0;
+        break;
+      case 'Accepted':
+        c = 1;
+        break;
+      case 'Packed':
+        c = 2;
+        break;
+      case 'Delivered':
+        c = 2;
+        break;
+      case 'Rejected':
+        c = 3;
+        break;
+    }
+    ;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -58,8 +88,8 @@ class _ItemListState extends State<ItemList> {
             child: Column(
               children: <Widget>[
                 OrderContainer(
-                  color: Colors.yellow,
-                  splashColor: Colors.black12,
+                  color: colors[c],
+                  splashColor: splashColors[c],
                   customerName:
                       '${Storage.customers['${widget.snap['details']['customer_id']}']['name']}',
                   itemnumbers: widget.snap['length'],
@@ -125,8 +155,8 @@ class _ItemListState extends State<ItemList> {
                         ),
                         DataCell(Center(
                             child: Text(Storage.products[e['product_id']]
-                                        ['quantity_${e['price_num']}'] !=
-                                    0
+                            ['quantity_${e['price_num']}'] !=
+                                0
                                 ? '${e['quantity']} x ${Storage.products[e['product_id']]['quantity_${e['price_num']}']} ${Storage.products[e['product_id']]['unit_${e['price_num']}']}'
                                 : '${e['quantity']}'))),
                         DataCell(Align(
@@ -217,59 +247,120 @@ class _ItemListState extends State<ItemList> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            RaisedButton.icon(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                color: Colors.redAccent,
-                onPressed: () async {
-                  showLoadingDialog(context, 'Rejecting');
-                  await Firestore.instance
-                      .collection('orders')
-                      .document(widget.snap['order_id'])
-                      .updateData({
-                    'details.stage': 'Rejected',
-                    'time.rejected': FieldValue.serverTimestamp()
-                  });
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  'Reject ',
-                  style: TextStyle(color: Colors.white),
-                )),
-            SizedBox(
-              width: 16,
-            ),
-            RaisedButton.icon(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                color: Colors.lightGreen,
-                onPressed: () async {
-                  showLoadingDialog(context, 'Accepting');
-                  await Firestore.instance
-                      .collection('orders')
-                      .document(widget.snap['order_id'])
-                      .updateData({
-                    'details.stage': 'Accepted',
-                    'time.accepted': FieldValue.serverTimestamp()
-                  });
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  'Accept',
-                  style: TextStyle(color: Colors.white),
-                ))
+            if (widget.snap['details']['stage'] == 'Order Placed')
+              Row(
+                children: <Widget>[
+                  RaisedButton.icon(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      color: Colors.redAccent,
+                      onPressed: () async {
+                        showLoadingDialog(context, 'Rejecting');
+                        await Firestore.instance
+                            .collection('orders')
+                            .document(widget.snap['order_id'])
+                            .updateData({
+                          'details.stage': 'Rejected',
+                          'time.rejected': FieldValue.serverTimestamp()
+                        });
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        'Reject ',
+                        style: TextStyle(color: Colors.white),
+                      )),
+                  SizedBox(
+                    width: 16,
+                  ),
+                  RaisedButton.icon(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      color: Colors.lightGreen,
+                      onPressed: () async {
+                        showLoadingDialog(context, 'Accepting');
+                        await Firestore.instance
+                            .collection('orders')
+                            .document(widget.snap['order_id'])
+                            .updateData({
+                          'details.stage': 'Accepted',
+                          'time.accepted': FieldValue.serverTimestamp()
+                        });
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      ),
+                      label: Text(
+                        'Accept',
+                        style: TextStyle(color: Colors.white),
+                      ))
+                ],
+              ),
+            if (widget.snap['details']['stage'] == 'Accepted')
+              RaisedButton.icon(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  color: Colors.blueAccent,
+                  onPressed: () async {
+                    showLoadingDialog(context, 'Packing');
+                    await Firestore.instance
+                        .collection('orders')
+                        .document(widget.snap['order_id'])
+                        .updateData({
+                      'details.stage': 'Packed',
+                      'time.packed': FieldValue.serverTimestamp()
+                    });
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    'Packed',
+                    style: TextStyle(color: Colors.white),
+                  )),
+            if (widget.snap['details']['stage'] == 'Packed')
+              RaisedButton.icon(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  color: Colors.cyan,
+                  onPressed: () async {
+                    showLoadingDialog(context, 'Delivering');
+                    await Firestore.instance
+                        .collection('orders')
+                        .document(widget.snap['order_id'])
+                        .updateData({
+                      'details.stage': 'Delivered',
+                      'time.delivered': FieldValue.serverTimestamp()
+                    });
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    'Delivered',
+                    style: TextStyle(color: Colors.white),
+                  )),
           ],
         ),
       ),

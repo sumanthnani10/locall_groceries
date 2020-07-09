@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:locallgroceries/containers/order_container.dart';
+import 'package:locallgroceries/screens/history.dart';
 import 'package:locallgroceries/screens/profile.dart';
 import 'package:locallgroceries/storage.dart';
 
@@ -241,15 +242,6 @@ class _HomeState extends State<Home> {
                   }
                 },
               ),
-              /*OrderContainer(
-                  onTap: () {
-                    Navigator.of(context).push(createRoute(ItemList()));
-                  },
-                  splashColor: Colors.orange,
-                  color: Color(0xffffaf00),
-                  customerName: 'Sumanth',
-                  itemnumbers: 10,
-                  items: 'Small Fresh Fish,Handmade Granite Keyboard,Handmade')*/
             ],
           ),
         ),
@@ -341,14 +333,14 @@ class _HomeState extends State<Home> {
             InkWell(
               onTap: () {
                 Navigator.of(context).pop();
-//                Navigator.push(context, createRoute(Profile()));
+                Navigator.push(context, createRoute(History()));
               },
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: FlatButton.icon(
                   onPressed: () {
                     Navigator.of(context).pop();
-//                Navigator.push(context, createRoute(Profile()));
+                    Navigator.push(context, createRoute(History()));
                   },
                   icon: Icon(Icons.history),
                   label: Text(
