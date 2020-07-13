@@ -637,7 +637,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                                       'Beverages',
                                       'Patanjali',
                                       'Vegetables',
-                                      'Diary',
+                                      'Dairy',
                                       'Snacks and Food',
                                       'Soaps and Shampoo',
                                       'Cleaners',

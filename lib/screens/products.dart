@@ -18,7 +18,7 @@ class _ProductsState extends State<Products> {
     'Chocolates',
     'Cleaners',
     'Dals & Pulses',
-    'Diary',
+    'Dairy',
     'Dry Fruits',
     'Edible Oils',
     'Hair Oils',

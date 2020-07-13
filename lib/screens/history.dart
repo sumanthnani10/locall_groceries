@@ -92,7 +92,7 @@ class _HistoryState extends State<History> {
                     .collection('orders')
                     .where('details.type', isEqualTo: 'grocery')
                     .where('details.provider_id',
-                    isEqualTo: 'isnapur_grocery_sairam')
+                        isEqualTo: 'isnapur_grocery_sairam')
                     .where('details.stage', whereIn: [
                   'Delivered',
                   'Rejected',
@@ -114,7 +114,7 @@ class _HistoryState extends State<History> {
                             String items = '';
                             snap['products'].forEach((e) {
                               items +=
-                              '${Storage.products[e['product_id']]['name']},';
+                                  '${Storage.products[e['product_id']]['name']},';
                             });
                             return OrderContainer(
                                 onTap: () {
@@ -124,15 +124,14 @@ class _HistoryState extends State<History> {
                                   )));
                                 },
                                 splashColor:
-                                snap['details']['stage'] == 'Delivered'
-                                    ? Colors.cyan
-                                    : Colors.red,
+                                    snap['details']['stage'] == 'Delivered'
+                                        ? Colors.cyan
+                                        : Colors.red,
                                 color: snap['details']['stage'] == 'Delivered'
                                     ? Colors.cyanAccent
                                     : Colors.redAccent,
                                 customerName:
-                                '${Storage
-                                    .customers['${snap['details']['customer_id']}']['name']}',
+                                    '${Storage.customers['${snap['details']['customer_id']}']['name']}',
                                 itemnumbers: snap['length'],
                                 items: items);
                           });
@@ -175,7 +174,7 @@ class _HistoryState extends State<History> {
         var curve = Curves.fastOutSlowIn;
 
         var tween =
-        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),

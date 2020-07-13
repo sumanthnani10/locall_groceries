@@ -485,7 +485,7 @@ class _AddProductState extends State<AddProduct> {
                                       'Beverages',
                                       'Patanjali',
                                       'Vegetables',
-                                      'Diary',
+                                      'Dairy',
                                       'Snacks and Food',
                                       'Soaps and Shampoo',
                                       'Cleaners',

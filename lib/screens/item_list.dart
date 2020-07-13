@@ -155,8 +155,8 @@ class _ItemListState extends State<ItemList> {
                         ),
                         DataCell(Center(
                             child: Text(Storage.products[e['product_id']]
-                            ['quantity_${e['price_num']}'] !=
-                                0
+                                        ['quantity_${e['price_num']}'] !=
+                                    0
                                 ? '${e['quantity']} x ${Storage.products[e['product_id']]['quantity_${e['price_num']}']} ${Storage.products[e['product_id']]['unit_${e['price_num']}']}'
                                 : '${e['quantity']}'))),
                         DataCell(Align(
