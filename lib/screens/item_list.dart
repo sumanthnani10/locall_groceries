@@ -310,7 +310,7 @@ class _ItemListState extends State<ItemList> {
             if (widget.snap['details']['stage'] == 'Accepted')
               RaisedButton.icon(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                   color: Colors.blueAccent,
@@ -337,7 +337,7 @@ class _ItemListState extends State<ItemList> {
             if (widget.snap['details']['stage'] == 'Packed')
               RaisedButton.icon(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                   color: Colors.cyan,
