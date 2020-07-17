@@ -45,15 +45,11 @@ class _HomeState extends State<Home> {
         });
       }
     });
-    await Firestore.instance
-        .collection('users')
-//        .where('area', isEqualTo: 'isnapur')
-        .orderBy('name')
-        .snapshots()
-        .listen((event) {
+    await Firestore.instance.collection('users').snapshots().listen((event) {
       if (mounted) {
         setState(() {
           Storage.customersList = event.documents;
+          print(event.documents.length);
           Storage.customers.clear();
           Storage.customersList.forEach((element) {
             Storage.customers[element.documentID] = element;
@@ -168,7 +164,7 @@ class _HomeState extends State<Home> {
                     .collection('orders')
                     .where('details.type', isEqualTo: 'grocery')
                     .where('details.provider_id',
-                        isEqualTo: 'isnapur_grocery_sairam')
+                    isEqualTo: 'isnapur_grocery_sairam')
                     .where('details.stage', whereIn: [
                   'Order Placed',
                   'Accepted',
@@ -181,6 +177,14 @@ class _HomeState extends State<Home> {
                     if (!snapshot.hasData)
                       return Text('No Orders');
                     else {
+                      snapshot.data.documents.sort((a, b) {
+                        if (b['time']['order_placed']
+                            .toDate()
+                            .isBefore(a['time']['order_placed'].toDate()))
+                          return -1;
+                        else
+                          return 1;
+                      });
                       return ListView.builder(
                           itemCount: snapshot.data.documents.length,
                           physics: BouncingScrollPhysics(),
@@ -204,7 +208,7 @@ class _HomeState extends State<Home> {
                             String items = '';
                             snap['products'].forEach((e) {
                               items +=
-                                  '${Storage.products[e['product_id']]['name']},';
+                              '${Storage.products[e['product_id']]['name']},';
                             });
                             return OrderContainer(
                                 onTap: () {
@@ -216,7 +220,9 @@ class _HomeState extends State<Home> {
                                 splashColor: splashColors[c],
                                 color: colors[c],
                                 customerName:
-                                    '${Storage.customers['${snap['details']['customer_id']}']['name']}',
+                                '${Storage
+                                    .customers['${snap['details']['customer_id']}']['first_name']} ${Storage
+                                    .customers['${snap['details']['customer_id']}']['last_name']}',
                                 itemnumbers: snap['length'],
                                 items: items);
                           });
@@ -251,106 +257,106 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Colors.orange[200], Colors.orange[300]]),
-                //color: Colors.blue,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Icon(
-                      Icons.photo,
-                      size: 70,
-                    ),
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.orange[200], Colors.orange[300]]),
+                    //color: Colors.blue,
                   ),
-                  Text("Sai Ram"),
-                  Text("Kirana Shop"),
-                ],
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: FlatButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: Icon(Icons.home),
-                  label: Text(
-                    'Home',
-                    style: TextStyle(fontSize: 15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Icon(
+                          Icons.photo,
+                          size: 70,
+                        ),
+                      ),
+                      Text("Sai Ram"),
+                      Text("Kirana Shop"),
+                    ],
                   ),
                 ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(context, createRoute(Products()));
-              },
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: FlatButton.icon(
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FlatButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(Icons.home),
+                      label: Text(
+                        'Home',
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
                     Navigator.of(context).pop();
                     Navigator.push(context, createRoute(Products()));
                   },
-                  icon: Icon(Icons.shopping_basket),
-                  label: Text(
-                    'Products',
-                    style: TextStyle(fontSize: 15.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FlatButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(context, createRoute(Products()));
+                      },
+                      icon: Icon(Icons.shopping_basket),
+                      label: Text(
+                        'Products',
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(context, createRoute(Profile()));
-              },
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: FlatButton.icon(
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
                     Navigator.of(context).pop();
                     Navigator.push(context, createRoute(Profile()));
                   },
-                  icon: Icon(Icons.account_circle),
-                  label: Text(
-                    'Profile',
-                    style: TextStyle(fontSize: 15.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FlatButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(context, createRoute(Profile()));
+                      },
+                      icon: Icon(Icons.account_circle),
+                      label: Text(
+                        'Profile',
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(context, createRoute(History()));
-              },
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: FlatButton.icon(
-                  onPressed: () {
+                InkWell(
+                  onTap: () {
                     Navigator.of(context).pop();
                     Navigator.push(context, createRoute(History()));
                   },
-                  icon: Icon(Icons.history),
-                  label: Text(
-                    'History',
-                    style: TextStyle(fontSize: 15.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FlatButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(context, createRoute(History()));
+                      },
+                      icon: Icon(Icons.history),
+                      label: Text(
+                        'History',
+                        style: TextStyle(fontSize: 15.0),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ])),
+              ])),
     );
   }
 
@@ -364,7 +370,7 @@ class _HomeState extends State<Home> {
         var curve = Curves.fastOutSlowIn;
 
         var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),

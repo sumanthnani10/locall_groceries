@@ -36,7 +36,8 @@ class _ProductsState extends State<Products> {
     'Others',
   ];
   List<dynamic> visproducts = new List<dynamic>();
-  String search = '', viewCat = 'All';
+  String search = '',
+      viewCat = 'All';
 
   ScrollController scrollController = new ScrollController();
 
@@ -186,9 +187,9 @@ class _ProductsState extends State<Products> {
                               return false;
                           } else {
                             if (e['name']
-                                    .toString()
-                                    .toLowerCase()
-                                    .contains(search.toLowerCase()) &&
+                                .toString()
+                                .toLowerCase()
+                                .contains(search.toLowerCase()) &&
                                 e['category'] == viewCat)
                               return true;
                             else
@@ -203,7 +204,7 @@ class _ProductsState extends State<Products> {
                               shrinkWrap: true,
                               childAspectRatio: 0.675,
                               children:
-                                  List.generate(visproducts.length, (index) {
+                              List.generate(visproducts.length, (index) {
                                 /*if (visproducts[index]['stock'] == null)
                                   print('${visproducts[index]['name']} stock');
                                 if (visproducts[index]['creation'] == null)
@@ -221,7 +222,7 @@ class _ProductsState extends State<Products> {
                               shrinkWrap: true,
                               childAspectRatio: 0.65,
                               children:
-                                  List.generate(visproducts.length, (index) {
+                              List.generate(visproducts.length, (index) {
                                 return ProductItem(
                                   snap: visproducts[index],
                                 );
@@ -231,18 +232,19 @@ class _ProductsState extends State<Products> {
                         } else {
                           return Center(
                               child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 32),
-                            child: Text('No Products'),
-                          ));
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 32),
+                                child: Text('No Products'),
+                              ));
                         }
                       },
                     ),
                   if (Storage.productsList.length == 0)
                     Center(
                         child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 32),
-                      child: Text('No Products'),
-                    ))
+                          padding: const EdgeInsets.symmetric(vertical: 32),
+                          child: Text('No Products'),
+                        ))
                 ],
               ),
             )),
@@ -271,7 +273,7 @@ class _ProductsState extends State<Products> {
         var curve = Curves.fastOutSlowIn;
 
         var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),

@@ -163,9 +163,11 @@ class _ProductItemState extends State<ProductItem>
                             children: <Widget>[
                               Text(
                                 widget.snap['quantity_${index + 1}']
-                                            .toString() !=
-                                        '0'
-                                    ? 'Rs.${widget.snap['price_${index + 1}']}/${widget.snap['quantity_${index + 1}']}${widget.snap['unit_${index + 1}']}'
+                                    .toString() !=
+                                    '0'
+                                    ? 'Rs.${widget.snap['price_${index +
+                                    1}']}/${widget.snap['quantity_${index +
+                                    1}']}${widget.snap['unit_${index + 1}']}'
                                     : 'Rs.${widget.snap['price_${index + 1}']}',
                                 style: TextStyle(
                                     fontSize: 13, color: Colors.black),
@@ -197,7 +199,10 @@ class _ProductItemState extends State<ProductItem>
                               if (widget.snap['price_${index + 1}'] !=
                                   widget.snap['mrp_${index + 1}'])
                                 Text(
-                                  '(${((widget.snap['mrp_${index + 1}'] - widget.snap['price_${index + 1}']) / widget.snap['mrp_${index + 1}'] * 100).round()}%)',
+                                  '(${((widget.snap['mrp_${index + 1}'] -
+                                      widget.snap['price_${index + 1}']) /
+                                      widget.snap['mrp_${index + 1}'] * 100)
+                                      .round()}%)',
                                   style: TextStyle(
                                       fontSize: 8,
                                       color: Colors.green,
@@ -268,7 +273,7 @@ class _ProductItemState extends State<ProductItem>
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
+                              const EdgeInsets.symmetric(horizontal: 4),
                               child: Text(
                                 widget.snap['name'],
                                 style: TextStyle(fontSize: 16),
@@ -278,7 +283,7 @@ class _ProductItemState extends State<ProductItem>
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
+                              const EdgeInsets.symmetric(horizontal: 4),
                               child: Text(
                                 widget.snap['category'],
                                 style: TextStyle(
@@ -295,7 +300,9 @@ class _ProductItemState extends State<ProductItem>
                                 children: <Widget>[
                                   Text(
                                     widget.snap['quantity_1'].toString() != '0'
-                                        ? 'Rs.${widget.snap['price_1']}/${widget.snap['quantity_1']}${widget.snap['unit_1']}'
+                                        ? 'Rs.${widget.snap['price_1']}/${widget
+                                        .snap['quantity_1']}${widget
+                                        .snap['unit_1']}'
                                         : 'Rs.${widget.snap['price_1']}',
                                     style: TextStyle(
                                         fontSize: 13, color: Colors.black),
@@ -315,7 +322,7 @@ class _ProductItemState extends State<ProductItem>
                                           fontSize: 12,
                                           color: Colors.red,
                                           decoration:
-                                              TextDecoration.lineThrough,
+                                          TextDecoration.lineThrough,
                                           decorationColor: Colors.black),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
@@ -328,7 +335,10 @@ class _ProductItemState extends State<ProductItem>
                                   if (widget.snap['price_1'] !=
                                       widget.snap['mrp_1'])
                                     Text(
-                                      '(${((widget.snap['mrp_1'] - widget.snap['price_1']) / widget.snap['mrp_1'] * 100).round()}%)',
+                                      '(${((widget.snap['mrp_1'] -
+                                          widget.snap['price_1']) /
+                                          widget.snap['mrp_1'] * 100)
+                                          .round()}%)',
                                       style: TextStyle(
                                           fontSize: 8,
                                           color: Colors.green,
@@ -341,10 +351,10 @@ class _ProductItemState extends State<ProductItem>
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 2),
+                              const EdgeInsets.symmetric(horizontal: 2),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   /*Column(
@@ -407,7 +417,8 @@ class _ProductItemState extends State<ProductItem>
                             await FirebaseStorage.instance
                                 .ref()
                                 .child(
-                                    'Images/isnapur/groceries/${widget.snap['product_id']}')
+                                'Images/isnapur/groceries/${widget
+                                    .snap['product_id']}')
                                 .delete();
                             await Firestore.instance
                                 .collection('locations')

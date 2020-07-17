@@ -5,20 +5,21 @@ class OrderContainer extends StatelessWidget {
   Color color, splashColor;
   String customerName, items;
   int itemnumbers;
-  String address = '', total = '', phone = '';
+  String address = '',
+      total = '',
+      phone = '';
   VoidCallback onTap;
 
-  OrderContainer(
-      {Key key,
-      @required this.color,
-      @required this.splashColor,
-      @required this.customerName,
-      @required this.itemnumbers,
-      @required this.items,
-      @required this.onTap,
-      this.address = '',
-      this.phone = '',
-      this.total = ''})
+  OrderContainer({Key key,
+    @required this.color,
+    @required this.splashColor,
+    @required this.customerName,
+    @required this.itemnumbers,
+    @required this.items,
+    @required this.onTap,
+    this.address = '',
+    this.phone = '',
+    this.total = ''})
       : super(key: key);
 
   @override

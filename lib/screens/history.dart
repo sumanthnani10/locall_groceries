@@ -58,8 +58,10 @@ class _HistoryState extends State<History> {
                   width: 169.5,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Colors.redAccent,
-                  ),
+                      color: Colors.deepOrangeAccent,
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(8),
+                          topRight: Radius.circular(8))),
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
                     'Rejected',
@@ -92,7 +94,7 @@ class _HistoryState extends State<History> {
                     .collection('orders')
                     .where('details.type', isEqualTo: 'grocery')
                     .where('details.provider_id',
-                        isEqualTo: 'isnapur_grocery_sairam')
+                    isEqualTo: 'isnapur_grocery_sairam')
                     .where('details.stage', whereIn: [
                   'Delivered',
                   'Rejected',
@@ -104,6 +106,14 @@ class _HistoryState extends State<History> {
                     if (!snapshot.hasData)
                       return Text('No Orders');
                     else {
+                      snapshot.data.documents.sort((a, b) {
+                        if (b['time']['order_placed']
+                            .toDate()
+                            .isBefore(a['time']['order_placed'].toDate()))
+                          return -1;
+                        else
+                          return 1;
+                      });
                       return ListView.builder(
                           itemCount: snapshot.data.documents.length,
                           physics: BouncingScrollPhysics(),
@@ -114,7 +124,7 @@ class _HistoryState extends State<History> {
                             String items = '';
                             snap['products'].forEach((e) {
                               items +=
-                                  '${Storage.products[e['product_id']]['name']},';
+                              '${Storage.products[e['product_id']]['name']},';
                             });
                             return OrderContainer(
                                 onTap: () {
@@ -124,14 +134,16 @@ class _HistoryState extends State<History> {
                                   )));
                                 },
                                 splashColor:
-                                    snap['details']['stage'] == 'Delivered'
-                                        ? Colors.cyan
-                                        : Colors.red,
+                                snap['details']['stage'] == 'Delivered'
+                                    ? Colors.cyan
+                                    : Colors.deepOrange,
                                 color: snap['details']['stage'] == 'Delivered'
                                     ? Colors.cyanAccent
-                                    : Colors.redAccent,
+                                    : Colors.deepOrangeAccent,
                                 customerName:
-                                    '${Storage.customers['${snap['details']['customer_id']}']['name']}',
+                                '${Storage
+                                    .customers['${snap['details']['customer_id']}']['first_name']} ${Storage
+                                    .customers['${snap['details']['customer_id']}']['last_name']}',
                                 itemnumbers: snap['length'],
                                 items: items);
                           });
@@ -174,7 +186,7 @@ class _HistoryState extends State<History> {
         var curve = Curves.fastOutSlowIn;
 
         var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
         return SlideTransition(
           position: animation.drive(tween),

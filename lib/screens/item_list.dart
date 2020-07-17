@@ -91,7 +91,7 @@ class _ItemListState extends State<ItemList> {
                   color: colors[c],
                   splashColor: splashColors[c],
                   customerName:
-                      '${Storage.customers['${widget.snap['details']['customer_id']}']['name']}',
+                      '${Storage.customers['${widget.snap['details']['customer_id']}']['first_name']} ${Storage.customers['${widget.snap['details']['customer_id']}']['last_name']}',
                   itemnumbers: widget.snap['length'],
                   items: '',
                   onTap: () {},
@@ -99,7 +99,7 @@ class _ItemListState extends State<ItemList> {
                       '${Storage.customers['${widget.snap['details']['customer_id']}']['address']}',
                   phone:
                       '${Storage.customers['${widget.snap['details']['customer_id']}']['mobile']}',
-                  total: '${widget.snap['total']}',
+                  total: '${widget.snap['price']['total']}',
                 ),
                 DataTable(
                     dataRowHeight: 36,

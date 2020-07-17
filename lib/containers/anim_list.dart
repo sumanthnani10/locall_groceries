@@ -10,11 +10,11 @@ class _AnimaListState extends State<AnimaList> {
 
   List<Widget> _items = [];
   List<TextEditingController> price_controller =
-      new List<TextEditingController>();
+  new List<TextEditingController>();
   List<TextEditingController> oprice_controller =
-      new List<TextEditingController>();
+  new List<TextEditingController>();
   List<TextEditingController> quan_controller =
-      new List<TextEditingController>();
+  new List<TextEditingController>();
   List<int> prices = new List<int>(),
       oprices = new List<int>(),
       quans = new List<int>();
@@ -59,7 +59,7 @@ class _AnimaListState extends State<AnimaList> {
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(color: Colors.black),
                   contentPadding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   labelText: 'Price',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -89,7 +89,7 @@ class _AnimaListState extends State<AnimaList> {
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(color: Colors.black),
                   contentPadding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   labelText: 'MRP',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -119,7 +119,7 @@ class _AnimaListState extends State<AnimaList> {
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(color: Colors.black),
                   contentPadding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   labelText: 'Quantity',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -206,7 +206,7 @@ class _AnimaListState extends State<AnimaList> {
                 quans.removeLast();
                 listKey.currentState.removeItem(
                     _items.length - 1,
-                    (_, animation) =>
+                        (_, animation) =>
                         _buildItem(context, _items.length - 1, animation),
                     duration: const Duration(milliseconds: 500));
                 setState(() {
