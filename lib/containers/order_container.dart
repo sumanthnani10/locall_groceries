@@ -5,21 +5,22 @@ class OrderContainer extends StatelessWidget {
   Color color, splashColor;
   String customerName, items;
   int itemnumbers;
-  String address = '',
-      total = '',
-      phone = '';
+  String address = '', total = '', phone = '';
   VoidCallback onTap;
+  bool fullAddress;
 
-  OrderContainer({Key key,
-    @required this.color,
-    @required this.splashColor,
-    @required this.customerName,
-    @required this.itemnumbers,
-    @required this.items,
-    @required this.onTap,
-    this.address = '',
-    this.phone = '',
-    this.total = ''})
+  OrderContainer(
+      {Key key,
+      @required this.color,
+      @required this.splashColor,
+      @required this.customerName,
+      @required this.itemnumbers,
+      @required this.items,
+      @required this.onTap,
+      this.address = '',
+      this.fullAddress = false,
+      this.phone = '',
+      this.total = ''})
       : super(key: key);
 
   @override
@@ -70,14 +71,25 @@ class OrderContainer extends StatelessWidget {
                   style: TextStyle(
                       color: Colors.black, fontSize: 12, fontFamily: 'Poppins'),
                 ),
-                Text(
-                  address == '' ? items : address,
-                  style: TextStyle(
-                      color: Colors.black, fontSize: 12, fontFamily: 'Poppins'),
-                  maxLines: 1,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                if (fullAddress)
+                  Text(
+                    address == '' ? items : address,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontFamily: 'Poppins'),
+                  ),
+                if (!fullAddress)
+                  Text(
+                    address == '' ? items : address,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontFamily: 'Poppins'),
+                    maxLines: 1,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 if (phone != '')
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
