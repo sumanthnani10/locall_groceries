@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as I;
 import 'package:flutter/rendering.dart';
 import 'package:locallgroceries/containers/order_container.dart';
+import 'package:locallgroceries/service/notification_handler.dart';
 import 'package:locallgroceries/storage.dart';
 
 class ItemList extends StatefulWidget {
@@ -109,6 +110,7 @@ class _ItemListState extends State<ItemList> {
               key: globalKey,
               child: Container(
                 color: Colors.white,
+                margin: const EdgeInsets.only(top: 8),
                 child: Column(
                   children: <Widget>[
                     OrderContainer(
@@ -285,6 +287,11 @@ class _ItemListState extends State<ItemList> {
                       color: Colors.redAccent,
                       onPressed: () async {
                         showLoadingDialog(context, 'Rejecting');
+                        await NotificationHandler.instance.sendMessage(
+                            'Order Rejected',
+                            'Sorry! Your Order has been Rejected.',
+                            widget.snap['notification_id'],
+                            'Rejected');
                         await Firestore.instance
                             .collection('orders')
                             .document(widget.snap['order_id'])
@@ -314,6 +321,11 @@ class _ItemListState extends State<ItemList> {
                       color: Colors.lightGreen,
                       onPressed: () async {
                         showLoadingDialog(context, 'Accepting');
+                        await NotificationHandler.instance.sendMessage(
+                            'Order Accepted',
+                            'Your Order has been Accepted. Your Order will soon be packed and delivered.',
+                            widget.snap['notification_id'],
+                            'Accepted');
                         await Firestore.instance
                             .collection('orders')
                             .document(widget.snap['order_id'])
@@ -343,6 +355,11 @@ class _ItemListState extends State<ItemList> {
                   color: Colors.blueAccent,
                   onPressed: () async {
                     showLoadingDialog(context, 'Packing');
+                    await NotificationHandler.instance.sendMessage(
+                        'Order Packed',
+                        'Your Order has been Packed. It will be delivered soon.',
+                        widget.snap['notification_id'],
+                        'Packed');
                     await Firestore.instance
                         .collection('orders')
                         .document(widget.snap['order_id'])
@@ -370,6 +387,11 @@ class _ItemListState extends State<ItemList> {
                   color: Colors.cyan,
                   onPressed: () async {
                     showLoadingDialog(context, 'Delivering');
+                    await NotificationHandler.instance.sendMessage(
+                        'Order Delivered',
+                        'Your Order has been Delivered. Thank you for shopping with us.',
+                        widget.snap['notification_id'],
+                        'Delivered');
                     await Firestore.instance
                         .collection('orders')
                         .document(widget.snap['order_id'])

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:locallgroceries/containers/order_container.dart';
 import 'package:locallgroceries/screens/history.dart';
 import 'package:locallgroceries/screens/profile.dart';
+import 'package:locallgroceries/service/notification_handler.dart';
 import 'package:locallgroceries/storage.dart';
 
 import 'item_list.dart';
@@ -20,10 +21,12 @@ class _HomeState extends State<Home> {
     Color(0xff00fd5d)
   ];
   List<Color> splashColors = [Colors.orange, Colors.yellow, Colors.green];
+  NotificationHandler notificationHandler = new NotificationHandler();
 
   @override
   void initState() {
     getProducts();
+    notificationHandler.init(context);
     super.initState();
   }
 

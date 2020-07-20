@@ -27,11 +27,11 @@ class _ModifyProductState extends State<ModifyProduct> {
   File image;
   final picker = ImagePicker();
   List<TextEditingController> price_controller =
-  new List<TextEditingController>();
+      new List<TextEditingController>();
   List<TextEditingController> oprice_controller =
-  new List<TextEditingController>();
+      new List<TextEditingController>();
   List<TextEditingController> quan_controller =
-  new List<TextEditingController>();
+      new List<TextEditingController>();
   List<int> prices = new List<int>(),
       oprices = new List<int>(),
       quans = new List<int>();
@@ -46,30 +46,6 @@ class _ModifyProductState extends State<ModifyProduct> {
   @override
   void initState() {
     super.initState();
-    print([
-      'Others',
-      'Dry Fruits',
-      'Masala',
-      'Spices',
-      'Edible Oils',
-      'Dals & Pulses',
-      'Rice & Rice Products',
-      'Atta & Flour',
-      'Salt, Sugar & Tea',
-      'Stationary',
-      'Beverages',
-      'Patanjali',
-      'Vegetables',
-      'Dairy',
-      'Snacks and Food',
-      'Soaps and Shampoo',
-      'Cleaners',
-      'Hair Oils',
-      'Body Sprays',
-      'Chocolates',
-      'Personal Hygiene',
-      'Pooja Products',
-    ].contains(widget.snap['category']));
     image = null;
     cat = [
       'Others',
@@ -160,7 +136,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(color: Colors.black),
                   contentPadding:
-                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   labelText: 'Price',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -196,7 +172,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(color: Colors.black),
                   contentPadding:
-                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   labelText: 'MRP',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -231,7 +207,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(color: Colors.black),
                   contentPadding:
-                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   labelText: 'Quantity',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -307,7 +283,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(color: Colors.black),
                   contentPadding:
-                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   labelText: 'Price',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -343,7 +319,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(color: Colors.black),
                   contentPadding:
-                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   labelText: 'MRP',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -378,7 +354,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                       borderSide: BorderSide(color: Colors.black)),
                   labelStyle: TextStyle(color: Colors.black),
                   contentPadding:
-                  const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                   labelText: 'Quantity',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -449,7 +425,7 @@ class _ModifyProductState extends State<ModifyProduct> {
       'product_id': widget.snap['product_id'],
       'stock': widget.snap['stock'] == null ? stock : widget.snap['stock'],
       'creation':
-      widget.snap['creation'] == null ? time : widget.snap['creation']
+          widget.snap['creation'] == null ? time : widget.snap['creation']
     };
 
     for (int i = 1; i <= count; i++) {
@@ -480,7 +456,6 @@ class _ModifyProductState extends State<ModifyProduct> {
       uploading = false;
       Navigator.of(context).pop();
     });
-    print(product);
   }
 
   @override
@@ -628,25 +603,25 @@ class _ModifyProductState extends State<ModifyProduct> {
                                   decoration: InputDecoration(
                                       disabledBorder: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(8),
+                                              BorderRadius.circular(8),
                                           borderSide:
-                                          BorderSide(color: Colors.black)),
+                                              BorderSide(color: Colors.black)),
                                       enabledBorder: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(8),
+                                              BorderRadius.circular(8),
                                           borderSide:
-                                          BorderSide(color: Colors.black)),
+                                              BorderSide(color: Colors.black)),
                                       labelStyle:
-                                      TextStyle(color: Colors.black),
+                                          TextStyle(color: Colors.black),
                                       contentPadding:
-                                      const EdgeInsets.symmetric(
-                                          vertical: 4, horizontal: 8),
+                                          const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 8),
                                       labelText: 'Product Name',
                                       border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(8),
+                                              BorderRadius.circular(8),
                                           borderSide:
-                                          BorderSide(color: Colors.black)),
+                                              BorderSide(color: Colors.black)),
                                       fillColor: Colors.white),
                                 ),
                                 SizedBox(
@@ -658,7 +633,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                                 ),
                                 Container(
                                   padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
+                                      const EdgeInsets.symmetric(horizontal: 8),
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(8),
@@ -694,12 +669,12 @@ class _ModifyProductState extends State<ModifyProduct> {
                                       'Personal Hygiene',
                                       'Pooja Products',
                                     ].map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
                                     onChanged: (String value) {
                                       setState(() {
                                         cat = value;
@@ -728,20 +703,20 @@ class _ModifyProductState extends State<ModifyProduct> {
                                   decoration: InputDecoration(
                                       enabledBorder: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(8),
+                                              BorderRadius.circular(8),
                                           borderSide:
-                                          BorderSide(color: Colors.black)),
+                                              BorderSide(color: Colors.black)),
                                       labelStyle:
-                                      TextStyle(color: Colors.black),
+                                          TextStyle(color: Colors.black),
                                       contentPadding:
-                                      const EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 8),
+                                          const EdgeInsets.symmetric(
+                                              vertical: 8, horizontal: 8),
                                       labelText: 'Description',
                                       border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(8),
+                                              BorderRadius.circular(8),
                                           borderSide:
-                                          BorderSide(color: Colors.black)),
+                                              BorderSide(color: Colors.black)),
                                       fillColor: Colors.white),
                                 ),
                                 SizedBox(
@@ -756,7 +731,7 @@ class _ModifyProductState extends State<ModifyProduct> {
                                             child: AnimatedList(
                                               key: listKey,
                                               initialItemCount:
-                                              widget.snap['prices'],
+                                                  widget.snap['prices'],
                                               itemBuilder:
                                                   (context, index, animation) {
                                                 return _buildItem(
@@ -768,9 +743,9 @@ class _ModifyProductState extends State<ModifyProduct> {
                                         Row(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                           children: <Widget>[
                                             FlatButton(
                                               onPressed: () {
@@ -784,9 +759,9 @@ class _ModifyProductState extends State<ModifyProduct> {
                                                 quans.removeLast();
                                                 count--;
                                                 listKey.currentState.removeItem(
-                                                  /*_items.length - 1*/
+                                                    /*_items.length - 1*/
                                                     count,
-                                                        (_, animation) =>
+                                                    (_, animation) =>
                                                         _buildItem(
                                                             context,
                                                             /*_items.length - 1*/
@@ -819,12 +794,12 @@ class _ModifyProductState extends State<ModifyProduct> {
                                                   count++;
                                                   listKey.currentState
                                                       .insertItem(
-                                                    /*_items.length*/
-                                                      count - 1,
-                                                      duration:
-                                                      const Duration(
-                                                          milliseconds:
-                                                          500));
+                                                          /*_items.length*/
+                                                          count - 1,
+                                                          duration:
+                                                              const Duration(
+                                                                  milliseconds:
+                                                                      500));
                                                   setState(() {});
                                                   /*_items = []
                                                     ..addAll(_items)
