@@ -35,20 +35,18 @@ class _ItemListState extends State<ItemList> {
     Colors.cyan,
     Colors.red
   ];
-  var x;
 
   Future<void> _capturePng() async {
     RenderRepaintBoundary boundary =
         globalKey.currentContext.findRenderObject();
-    ui.Image image = await boundary.toImage();
+    ui.Image image = await boundary.toImage(pixelRatio: 3);
     ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     Uint8List pngBytes = byteData.buffer.asUint8List();
-    x = pngBytes;
     await Share.file(
       'esys image',
-      'esys.jpg',
+      'esys.png',
       pngBytes,
-      'image/jpg',
+      'image/png',
     );
   }
 
@@ -123,10 +121,11 @@ class _ItemListState extends State<ItemList> {
                       items: '',
                       onTap: () {},
                       address:
-                          '${Storage.customers['${widget.snap['details']['customer_id']}']['address']}',
+                          '${Storage.customers['${widget.snap['details']['customer_id']}']['grocery']['address']}',
                       phone:
                           '${Storage.customers['${widget.snap['details']['customer_id']}']['mobile']}',
-                      total: '${widget.snap['price']['total']}',
+                      total:
+                          '${widget.snap['price']['total'] + widget.snap['price']['delivery']}',
                     ),
                     DataTable(
                         dataRowHeight: 36,
@@ -171,27 +170,45 @@ class _ItemListState extends State<ItemList> {
                           )
                         ],
                         rows: widget.snap['products'].map<DataRow>((e) {
-                          return DataRow(cells: <DataCell>[
-                            DataCell(
-                              Container(
-                                  width: 96,
-                                  child: Text(
-                                    '${Storage.products[e['product_id']]['name']}',
-                                    maxLines: 2,
-                                  )),
-                            ),
-                            DataCell(Center(
-                                child: Text(Storage.products[e['product_id']]
-                                            ['quantity_${e['price_num']}'] !=
-                                        0
-                                    ? '${e['quantity']} x ${Storage.products[e['product_id']]['quantity_${e['price_num']}']} ${Storage.products[e['product_id']]['unit_${e['price_num']}']}'
-                                    : '${e['quantity']}'))),
-                            DataCell(Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                    'Rs.${Storage.products[e['product_id']]['price_${e['price_num']}'] * e['quantity']}'))),
-                          ]);
-                        }).toList()),
+                              return DataRow(cells: <DataCell>[
+                                DataCell(
+                                  Container(
+                                      width: 96,
+                                      child: Text(
+                                        '${Storage.products[e['product_id']]['name']}',
+                                        maxLines: 2,
+                                      )),
+                                ),
+                                DataCell(Center(
+                                    child: Text(Storage
+                                                    .products[e['product_id']][
+                                                'quantity_${e['price_num']}'] !=
+                                            0
+                                        ? '${e['quantity']} x ${Storage.products[e['product_id']]['quantity_${e['price_num']}']} ${Storage.products[e['product_id']]['unit_${e['price_num']}']}'
+                                        : '${e['quantity']}'))),
+                                DataCell(Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                        'Rs.${Storage.products[e['product_id']]['price_${e['price_num']}'] * e['quantity']}'))),
+                              ]);
+                            }).toList() +
+                            [
+                              DataRow(cells: <DataCell>[
+                                DataCell(
+                                  Container(
+                                      width: 96,
+                                      child: Text(
+                                        'Delivery',
+                                        maxLines: 2,
+                                      )),
+                                ),
+                                DataCell(Center(child: Text(' '))),
+                                DataCell(Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                        'Rs.${widget.snap['price']['delivery']}'))),
+                              ])
+                            ]),
                     /*Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[

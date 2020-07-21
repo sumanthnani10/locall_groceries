@@ -10,7 +10,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="locallgroceries"
+        android:label="Locall - Groceries Partner"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
